@@ -140,7 +140,7 @@ export default {
             this.carouselWrap.classList.remove('over-next')
             this.$el.querySelector('.clone-next').classList.remove('over-next')
             this.carouselWrap.scrollTo({ left: 0, behavior: 'auto' })
-          }, 300)
+          }, 500)
         }
         else this.carouselWrap.scrollTo({ left: this.currLeft+this.currWidth, behavior: 'smooth' })
       }
@@ -153,7 +153,7 @@ export default {
             this.carouselWrap.classList.remove('over-prev')
             this.$el.querySelector('.clone-prev').classList.remove('over-prev')
             this.carouselWrap.scrollTo({ left: this.scrollWidth-this.currWidth, behavior: 'auto' })
-          }, 300)
+          }, 500)
         }
         else this.carouselWrap.scrollTo({ left: this.currLeft-this.currWidth, behavior: 'smooth' })
       }
@@ -359,11 +359,11 @@ export default {
 
     &.over-prev { 
       transform: translateX(100%); 
-      transition: 0.45s;
+      transition: 0.5s ease-in-out;
     }
     &.over-next { 
       transform: translateX(-100%); 
-      transition: 0.45s;
+      transition: 0.5s ease-in-out;
     }
   }
 
@@ -386,7 +386,7 @@ export default {
       opacity: 1;
     }
 
-    img {
+    > img {
       width: 100%;
       height: 100%;
       object-fit: cover !important;

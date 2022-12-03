@@ -125,6 +125,20 @@
         </div>
 
         <div style="width: 100%; height: 15vh; background: lightgreen"></div>
+
+        <div class="center-all">
+          <carousel-wc maxw="80rem" maxh="45rem" infinite="true">
+            <span slot="slides">
+              <image-wc src="https://picsum.photos/600/390" alt="carousel image"></image-wc>
+              <hello-world></hello-world>
+              <image-wc src="https://picsum.photos/605/400" alt="carousel image"></image-wc>
+              <hello-world></hello-world>
+              <image-wc src="https://picsum.photos/610/400" alt="carousel image"></image-wc>
+            </span>
+          </carousel-wc>
+        </div>
+
+        <div style="width: 100%; height: 15vh; background: lightgreen"></div>
       </div>
     </div>
   </div>
