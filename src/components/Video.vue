@@ -79,13 +79,13 @@ export default {
             this.provider = 'youtube'
             vid_id = this.src.split('v=')[1]
             vid_src = `//www.youtube.com/embed/${vid_id}?version=3&enablejsapi=1&playlist=${vid_id}&loop=1&mute=1&autoplay=1`
-            fetch(`//www.youtube.com/oembed?url=https://www.youtube.com/watch?v=${vid_id}&format=json`).then((response) => response.json()).then((data) => this.getVideoAspect('youtube', data));
+            fetch(`https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=${vid_id}&format=json`).then((response) => response.json()).then((data) => this.getVideoAspect('youtube', data));
             break
           case this.src.indexOf('vimeo') > 0: 
             this.provider = 'vimeo'
             vid_id = this.src.split('vimeo.com/')[1]
             vid_src = `//player.vimeo.com/video/${vid_id}?autoplay=1&loop=1&muted=1&background=1&title=0&byline=0&portrait=0&sidedock=0`
-            fetch(`//vimeo.com/api/oembed.json?url=https://www.vimeo.com/${vid_id}`).then((response) => response.json()).then((data) => this.getVideoAspect('vimeo', data));
+            fetch(`https://vimeo.com/api/oembed.json?url=https://www.vimeo.com/${vid_id}`).then((response) => response.json()).then((data) => this.getVideoAspect('vimeo', data));
             break
           default: 
             this.provider = 'html5'
