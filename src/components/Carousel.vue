@@ -1,5 +1,5 @@
 <template>
-  <div data-id="carousel" :data-view="viewable" :data-count="slideCount" :show-arrows="arrowsWrap=='' ? 'true' : 'false'">
+  <div data-id="carousel" :data-row="sRows" :data-col="sColumns" :data-count="slideCount" :show-arrows="arrowsWrap=='' ? 'true' : 'false'">
     <div class="carousel-wrap" :style="wrap_styles" @click="onClick" @mousemove="watchMouse">
       <slot name="slides"></slot>
     </div>
@@ -27,7 +27,7 @@ export default {
       maxHeight: '0',
       minHeight: '0',
       alignment: '',
-      viewable: '',
+      sColumns: '',
       timeout: null,
       loadObserver: null,
       mouseStalker: null,
@@ -51,7 +51,8 @@ export default {
     minw: { default: '', type: String },
     maxh: { default: '', type: String },
     minh: { default: '', type: String },
-    slideViewCount: { default: '1', type: String },
+    slideViewColumns: { default: '1', type: String },
+    slideViewRows: { default: '1', type: String },
     align: { default: 'left', type: String },
     transition: { default: 'fade', type: String },
     arrowsWrap: { default: '', type: String },
@@ -116,7 +117,7 @@ export default {
       this.scrollTimeout = setTimeout(() => {
         this.scrolling = false
         this.getIndex()
-      },150)
+      },50)
     },
     watchMouse(e) { 
       this.mouseX = e.pageX 
@@ -144,10 +145,10 @@ export default {
             setTimeout(() => { 
               this.carouselWrap.classList.remove('over-next')
               this.$el.querySelector('.clone-next').classList.remove('over-next')
-              this.carouselWrap.scrollTo({ left: 0, behavior: 'auto' })
-            }, 450)
+              window.requestAnimationFrame( this.carouselWrap.scrollTo({ left: 0, behavior: 'auto' }) )
+            }, 250)
           }
-          else this.carouselWrap.scrollTo({ left: this.currLeft+this.currWidth, behavior: 'smooth' })
+          else window.requestAnimationFrame( this.carouselWrap.scrollTo({ left: this.currLeft+this.currWidth, behavior: 'smooth' }) )
         }
         if (this.move == 'prev') {
           if (this.currIndex == 0 && this.infinite == 'true') {
@@ -159,10 +160,10 @@ export default {
             setTimeout(() => {
               this.carouselWrap.classList.remove('over-prev')
               this.$el.querySelector('.clone-prev').classList.remove('over-prev')
-              this.carouselWrap.scrollTo({ left: this.scrollWidth-this.currWidth, behavior: 'auto' })
-            }, 450)
+              window.requestAnimationFrame( this.carouselWrap.scrollTo({ left: this.scrollWidth-this.currWidth, behavior: 'auto' }) )
+            }, 250)
           }
-          else this.carouselWrap.scrollTo({ left: this.currLeft-this.currWidth, behavior: 'smooth' })
+          else window.requestAnimationFrame( this.carouselWrap.scrollTo({ left: this.currLeft-this.currWidth, behavior: 'smooth' }) )
         }
       }
     },
@@ -171,11 +172,11 @@ export default {
       if (this.currIndex != idx) {
         if (idx > this.currIndex) {
           let offset = this.currLeft + ((idx-this.currIndex) * this.currWidth)
-          this.carouselWrap.scrollTo({ left: offset, behavior: 'smooth' })
+          window.requestAnimationFrame( this.carouselWrap.scrollTo({ left: offset, behavior: 'smooth' }) )
         }
         if (idx < this.currIndex) {
           let offset = this.currLeft - ((this.currIndex-idx) * this.currWidth)
-          this.carouselWrap.scrollTo({ left: offset, behavior: 'smooth' })
+          window.requestAnimationFrame( this.carouselWrap.scrollTo({ left: offset, behavior: 'smooth' }) )
         }
       }
     },
@@ -214,7 +215,7 @@ export default {
             theSlide.setAttribute('class','slide') 
             if (this.$el.querySelectorAll('.clone-prev').length == 0) nextClone.setAttribute('class','clone clone-prev')
           }
-          for (let a=0; a<this.viewable; a++) {
+          for (let a=0; a<this.sColumns*this.sRows; a++) {
             let blank = document.createElement('div')
             if (slideSet.children[0]) theSlide.appendChild(slideSet.children[0])
             else theSlide.appendChild(blank)
@@ -239,13 +240,15 @@ export default {
       let theMaxh = this.maxh.split(',')
       let theMinh = this.minh.split(',')
       let theAlign = this.align.split(',') 
-      let theCount = this.slideViewCount.split(',') 
+      let theCount = this.slideViewColumns.split(',') 
+      let theRCount = this.slideViewRows.split(',') 
       this.maxWidth = theMaxw[0]
       this.minWidth = theMinw[0]
       this.maxHeight = theMaxh[0]
       this.minHeight = theMinh[0]
       this.alignment = theAlign[0]
-      this.viewable = theCount[0]
+      this.sColumns = theCount[0]
+      this.sRows = theRCount[0]
       switch (true) {
         case this.displayWidth >= this.bp_sm && this.displayWidth < this.bp_md:
           for (let i in theMaxw) this.maxWidth = theMaxw[i] != undefined && theMaxw[i] != '' && i < 2 ? theMaxw[i] : this.maxWidth
@@ -253,7 +256,8 @@ export default {
           for (let i in theMaxh) this.maxHeight = theMaxh[i] != undefined && theMaxh[i] != '' && i < 2 ? theMaxh[i] : this.maxHeight
           for (let i in theMinh) this.minHeight = theMinh[i] != undefined && theMinh[i] != '' && i < 2 ? theMinh[i] : this.minHeight
           for (let i in theAlign) this.alignment = theAlign[i] != undefined && theAlign[i] != '' && i < 2 ? theAlign[i] : this.alignment
-          for (let i in theCount) this.viewable = theCount[i] != undefined && theCount[i] != '' && i < 2 ? theCount[i] : this.viewable
+          for (let i in theCount) this.sColumns = theCount[i] != undefined && theCount[i] != '' && i < 2 ? theCount[i] : this.sColumns
+          for (let i in theRCount) this.sRows = theRCount[i] != undefined && theRCount[i] != '' && i < 2 ? theRCount[i] : this.sRows
           break
         case this.displayWidth >= this.bp_md && this.displayWidth < this.bp_lg:
           for (let i in theMaxw) this.maxWidth = theMaxw[i] != undefined && theMaxw[i] != '' && i < 3 ? theMaxw[i] : this.maxWidth
@@ -261,7 +265,8 @@ export default {
           for (let i in theMaxh) this.maxHeight = theMaxh[i] != undefined && theMaxh[i] != '' && i < 3 ? theMaxh[i] : this.maxHeight
           for (let i in theMinh) this.minHeight = theMinh[i] != undefined && theMinh[i] != '' && i < 3 ? theMinh[i] : this.minHeight
           for (let i in theAlign) this.alignment = theAlign[i] != undefined && theAlign[i] != '' && i < 3 ? theAlign[i] : this.alignment
-          for (let i in theCount) this.viewable = theCount[i] != undefined && theCount[i] != '' && i < 3 ? theCount[i] : this.viewable
+          for (let i in theCount) this.sColumns = theCount[i] != undefined && theCount[i] != '' && i < 3 ? theCount[i] : this.sColumns
+          for (let i in theRCount) this.sRows = theRCount[i] != undefined && theRCount[i] != '' && i < 3 ? theRCount[i] : this.sRows
           break
         case this.displayWidth >= this.bp_lg && this.displayWidth < this.bp_xl:
           for (let i in theMaxw) this.maxWidth = theMaxw[i] != undefined && theMaxw[i] != '' && i < 4 ? theMaxw[i] : this.maxWidth
@@ -269,7 +274,8 @@ export default {
           for (let i in theMaxh) this.maxHeight = theMaxh[i] != undefined && theMaxh[i] != '' && i < 4 ? theMaxh[i] : this.maxHeight
           for (let i in theMinh) this.minHeight = theMinh[i] != undefined && theMinh[i] != '' && i < 4 ? theMinh[i] : this.minHeight
           for (let i in theAlign) this.alignment = theAlign[i] != undefined && theAlign[i] != '' && i < 4 ? theAlign[i] : this.alignment
-          for (let i in theCount) this.viewable = theCount[i] != undefined && theCount[i] != '' && i < 4 ? theCount[i] : this.viewable
+          for (let i in theCount) this.sColumns = theCount[i] != undefined && theCount[i] != '' && i < 4 ? theCount[i] : this.sColumns
+          for (let i in theRCount) this.sRows = theRCount[i] != undefined && theRCount[i] != '' && i < 4 ? theRCount[i] : this.sRows
           break
         case this.displayWidth >= this.bp_xl:
           for (let i in theMaxw) this.maxWidth = theMaxw[i] != undefined && theMaxw[i] != '' ? theMaxw[i] : this.maxWidth
@@ -277,7 +283,8 @@ export default {
           for (let i in theMaxh) this.maxHeight = theMaxh[i] != undefined && theMaxh[i] != '' ? theMaxh[i] : this.maxHeight
           for (let i in theMinh) this.minHeight = theMinh[i] != undefined && theMinh[i] != '' ? theMinh[i] : this.minHeight
           for (let i in theAlign) this.alignment = theAlign[i] != undefined && theAlign[i] != '' ? theAlign[i] : this.alignment
-          for (let i in theCount) this.viewable = theCount[i] != undefined && theCount[i] != '' ? theCount[i] : this.viewable
+          for (let i in theCount) this.sColumns = theCount[i] != undefined && theCount[i] != '' ? theCount[i] : this.sColumns
+          for (let i in theRCount) this.sRows = theRCount[i] != undefined && theRCount[i] != '' ? theRCount[i] : this.sRows
           break
       }
     },
@@ -314,7 +321,7 @@ export default {
   watch: {
     displayWidth() { this.getBreakPointValues() },
     lazyLoaded() { this.buildSlides() },
-    viewable() { this.buildSlides(); this.getIndex() },
+    sColumns() { this.buildSlides(); this.getIndex() },
     mouseX() { 
       this.setDims()
       let thisMid = this.currBounds.left + (this.currWidth/2)
@@ -368,11 +375,11 @@ export default {
       
       &.clone-next.over-next { 
         transform: translateX(-100%);
-        transition: 0.45s linear;
+        transition: 0.25s ease-out;
       }
       &.clone-prev.over-prev { 
         transform: translateX(100%);
-        transition: 0.45s linear;
+        transition: 0.25s ease-out;
       }
 
       > .slide {
@@ -403,13 +410,27 @@ export default {
 
     &:hover .mouse-stalker {
       opacity: 1;
-      &.m-next::before { content: '\003E'; transform: scaleY(1.5); }
-      &.m-prev::before { content: '\003C'; transform: scaleY(1.5); }
+      &.m-next::before { 
+        content: '\003E'; 
+        transform: scaleY(1.5); 
+      }
+      &.m-prev::before { 
+        content: '\003C'; 
+        transform: scaleY(1.5); 
+      }
     }
 
     &:hover .mouse-stalker:not(.infinite) {
-      &.m-next.index-end::before { content: '\00D7'; transform: scaleY(1); }
-      &.m-prev.index-start::before { content: '\00D7'; transform: scaleY(1); }
+      &.m-next.index-end::before { 
+        content: '\00D7'; 
+        transform: scaleY(1);
+        color: black; 
+      }
+      &.m-prev.index-start::before { 
+        content: '\00D7'; 
+        transform: scaleY(1); 
+        color: black;
+      }
     }
 
     &[data-count="1"] .mouse-stalker { display: none; }
@@ -439,11 +460,11 @@ export default {
 
       &.over-prev { 
         transform: translateX(100%); 
-        transition: 0.5s linear;
+        transition: 0.25s ease-out;
       }
       &.over-next { 
         transform: translateX(-100%); 
-        transition: 0.5s linear;
+        transition: 0.25s ease-out;
       }
 
       > :not(.slide) { display: none; }
@@ -451,7 +472,7 @@ export default {
 
     .slide {
       width: 100%;
-      min-height: 100%;
+      max-height: 100%;
       border-radius: 50%;
       background: linear-gradient(100deg,#b3b3b3, #555454, #b3b3b3 , #515252,#b3b3b3, #555554);
       background-size: 600% 100%;
@@ -460,6 +481,7 @@ export default {
       animation-direction: alternate;
       opacity: 0.15;
       flex: 0 0 100%;
+      flex-wrap: wrap;
       scroll-snap-align: center;
       display: flex;
 
@@ -478,24 +500,43 @@ export default {
       }
     }
 
-    &[data-view="2"] .slide > img,
-    &[data-view="2"] .slide > div { width: 50%; }
-    &[data-view="3"] .slide > img,
-    &[data-view="3"] .slide > div { width: 33.33%; }
-    &[data-view="4"] .slide > img,
-    &[data-view="4"] .slide > div { width: 25%; }
-    &[data-view="5"] .slide > img,
-    &[data-view="5"] .slide > div { width: 20%; }
-    &[data-view="6"] .slide > img,
-    &[data-view="6"] .slide > div { width: 16.66%; }
-    &[data-view="7"] .slide > img,
-    &[data-view="7"] .slide > div { width: 14.28%; }
-    &[data-view="8"] .slide > img,
-    &[data-view="8"] .slide > div { width: 12.5%; }
-    &[data-view="9"] .slide > img,
-    &[data-view="9"] .slide > div { width: 11.11%; }
-    &[data-view="10"] .slide > img,
-    &[data-view="10"] .slide > div { width: 10%; }
+    &[data-row="2"] .slide > img,
+    &[data-row="2"] .slide > div { height: 50%; }
+    &[data-row="3"] .slide > img,
+    &[data-row="3"] .slide > div { height: 33.33%; }
+    &[data-row="4"] .slide > img,
+    &[data-row="4"] .slide > div { height: 25%; }
+    &[data-row="5"] .slide > img,
+    &[data-row="5"] .slide > div { height: 20%; }
+    &[data-row="6"] .slide > img,
+    &[data-row="6"] .slide > div { height: 16.66%; }
+    &[data-row="7"] .slide > img,
+    &[data-row="7"] .slide > div { height: 14.28%; }
+    &[data-row="8"] .slide > img,
+    &[data-row="8"] .slide > div { height: 12.5%; }
+    &[data-row="9"] .slide > img,
+    &[data-row="9"] .slide > div { height: 11.11%; }
+    &[data-row="10"] .slide > img,
+    &[data-row="10"] .slide > div { height: 10%; }
+
+    &[data-col="2"] .slide > img,
+    &[data-col="2"] .slide > div { width: 50%; }
+    &[data-col="3"] .slide > img,
+    &[data-col="3"] .slide > div { width: 33.33%; }
+    &[data-col="4"] .slide > img,
+    &[data-col="4"] .slide > div { width: 25%; }
+    &[data-col="5"] .slide > img,
+    &[data-col="5"] .slide > div { width: 20%; }
+    &[data-col="6"] .slide > img,
+    &[data-col="6"] .slide > div { width: 16.66%; }
+    &[data-col="7"] .slide > img,
+    &[data-col="7"] .slide > div { width: 14.28%; }
+    &[data-col="8"] .slide > img,
+    &[data-col="8"] .slide > div { width: 12.5%; }
+    &[data-col="9"] .slide > img,
+    &[data-col="9"] .slide > div { width: 11.11%; }
+    &[data-col="10"] .slide > img,
+    &[data-col="10"] .slide > div { width: 10%; }
 
     .dots {
       padding: 5px 10px;

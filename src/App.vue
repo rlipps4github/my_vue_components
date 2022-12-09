@@ -82,9 +82,7 @@
       </div>
   
       <div  id="page4" class="block-area center" style="width: 100%; height: 50vw; background: lightblue">
-        <div style="width: 100%; height: 20vh; background: lightcoral">
-          <h1>4 - Parallax Widget</h1>
-        </div>
+        <h1 style="color: white;">4 - Parallax Widget</h1>
 
         <parallax-wc src="https://picsum.photos/900/1200" ></parallax-wc>
 
@@ -92,7 +90,7 @@
       </div>
 
       <div id="page5" class="block-area center" style="width: 100%; height: 80vh; background: lightgray">
-        <div style="width: 100%; height: 20vh; background: lightcoral">
+        <div style="width: 100%; height: 10vh; background: lightcoral">
           <h1>5 - Parallax Widget SVG Animation</h1>
         </div>
 
@@ -142,7 +140,7 @@
         <div style="width: 100%; height: 15vh; background: lightgreen"></div>
 
         <div class="center-all">
-          <carousel-wc maxw="120rem" minh="25rem" maxh="45rem" infinite="true" slide-view-count="1,2,3" arrowsWrap="#top-arrows" dotsWrap="#top-dots" dotsType="dots">
+          <carousel-wc maxw="120rem" minh="25rem" maxh="45rem" infinite="true" slide-view-rows="1,2,2" slide-view-columns="1,2,3" arrows-wrap="#top-arrows" dots-wrap="#top-dots" dots-type="dots">
             <span slot="slides">
               <image-wc src="https://picsum.photos/600/390" alt="carousel image"></image-wc>
               <image-wc src="https://picsum.photos/600/410" alt="carousel image"></image-wc>
@@ -162,17 +160,19 @@
 
         <div style="width: 100%; height: 15vh; background: lightgreen">
           <div id="top-arrows">
+            &nbsp;
             <a class="prev"> &lt; </a>
-            &nbsp;&nbsp;
+            &nbsp;
+            <span id="top-dots"></span>
+            &nbsp;
             <a class="next"> &gt; </a>
+            &nbsp;
           </div>
-          <div id="top-dots">
-            
-          </div>
+          
         </div>
 
         <div class="center-all">
-          <carousel-wc maxw="80rem" minh="65rem" infinite="true" slideViewCount="1,2,3">
+          <carousel-wc maxw="80rem" minh="65rem" infinite="true" slide-view-columns="1,2,3">
             <span slot="slides">
               <hello-world></hello-world>
               <image-wc src="https://picsum.photos/605/400" alt="carousel image"></image-wc>
@@ -317,6 +317,9 @@ body {
 
 #top-arrows {
   font-size: 5rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 
   .next,
   .prev { cursor: pointer; }
@@ -331,12 +334,13 @@ body {
   padding: 0;
   margin: 0;
   display: flex;
+  flex-wrap: wrap;
   justify-content: center;
   list-style: none;
 
   .dot {
-    width: 10px;
-    height: 10px;
+    width: 15px;
+    height: 15px;
     border-radius: 50%;
     margin: 15px;
     background-color: #2c3e50;
@@ -344,7 +348,7 @@ body {
 
     &.active {
       background-color: #41B883;
-      transform: scale(2);
+      transform: scale(1.5);
       transform-origin: center;
     }
   }
