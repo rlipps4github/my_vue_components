@@ -1,7 +1,9 @@
 <template>
   <div id="app">
 
+    <!-- HEADER -->
     <header id="header">
+    <!-- logo -->
       <div class="logo">
         <anchor-wc class="logo-link" sps="true" url="#hero" atitle="Home">
           <span slot="prefix">
@@ -9,9 +11,8 @@
           </span>
         </anchor-wc>
       </div>
-
+    <!-- navigation -->
       <nav>
-
         <anchor-wc aid="page1Nav" class="nav-link" sps="true" url="#page1" lbl="Images">
           <span slot="prefix"><i class="fa-sharp fa-solid fa-star"></i></span>
         </anchor-wc>
@@ -34,11 +35,9 @@
 
         <anchor-wc aid="page6Nav" class="nav-link" sps="true" url="#page6" lbl="Carousel">
           <span slot="prefix"><i class="fa-sharp fa-solid fa-star"></i></span>
-        </anchor-wc>
-
-        
+        </anchor-wc>        
       </nav>
-
+    <!-- cta and info -->
       <div class="ctas">
         <anchor-wc aid="external" classes="btn" url="https://google.com#location3" lbl="(external)"></anchor-wc>
         <anchor-wc aid="internal" class="nav-link" sps="true" url="#location1" lbl="(internal)">
@@ -46,16 +45,16 @@
         </anchor-wc>
       </div>
     </header>
-
+    <!-- WRAPPER -->
     <div id="wrapper">
-
+      <!-- hero banner -->
       <div id="hero" style="width: 100%; height: 100vh; background: lightgray">
         <image-wc fit="cover" src="https://picsum.photos/1200/800,,,https://picsum.photos/1920/1080" alt="banner image"></image-wc>
         <div class="fillParent center-all"><h1>My Vue<br>Components<br>Library</h1></div>
       </div>
 
       <div id="page1" class="block-area" style=" background: lightskyblue; ">
-        <h1>Page 1</h1>
+        <h1>1 - Photo widget</h1>
         <div class="side-by-side">
           <hello-world></hello-world>
           <image-wc maxw="50rem" src="https://picsum.photos/800/600" alt="banner image"></image-wc>
@@ -63,7 +62,7 @@
       </div>
 
       <div id="page2" class="block-area" style=" background: lightcyan; ">
-        <h1>Page 2</h1>
+        <h1>2 - Video Widget</h1>
         <div class="side-by-side reverse">
           <hello-world></hello-world>
           <video-wc fit="contain" maxw="32rem,,50rem" src="https://www.vimeo.com/194553881"></video-wc>
@@ -74,24 +73,26 @@
       </div>
 
       <div id="page3" class="block-area" style=" background: lightsteelblue; ">
-        <h1>Page 3</h1>
+        <h1>3 - Video Widget</h1>
         <div class="side-by-side">
           <hello-world></hello-world>
           <video-wc maxw="20rem,,50rem" src="https://www.youtube.com/watch?v=C0DPdy98e4c"></video-wc>
         </div>
       </div>
-
-      <div style="width: 100%; height: 20vh; background: lightcoral"></div>
-
-
   
       <div  id="page4" class="block-area center" style="width: 100%; height: 50vw; background: lightblue">
+        <h1 style="color: white;">4 - Parallax Widget</h1>
+
         <parallax-wc src="https://picsum.photos/900/1200" ></parallax-wc>
 
         <parallax-wc maxw="30rem, 40rem,,60rem" maxh="20vh, 30rem,,40rem" src="https://picsum.photos/800/600" inline="true" style="position: absolute;"></parallax-wc>
       </div>
 
       <div id="page5" class="block-area center" style="width: 100%; height: 80vh; background: lightgray">
+        <div style="width: 100%; height: 10vh; background: lightcoral">
+          <h1>5 - Parallax Widget SVG Animation</h1>
+        </div>
+
         <parallax-wc src="slot" minh="20vw" dasharray="1250" attribute="stroke-dashoffset" inline="true">
           <span slot="svg">
             <svg viewBox="0 0 1202.25 229.55" xmlns="http://www.w3.org/2000/svg">
@@ -109,17 +110,75 @@
         </parallax-wc>
       </div>
 
-      <div id="page6" class="block-area center"  style="width: 100%; height: 100vh; background: lightgray">
-        <div style="width: 100%; height: 15vh; background: lightgreen"></div>
+      <div id="page6" class="block-area center"  style="width: 100%; background: lightgray">
+        <div style="width: 100%; height: 15vh; background: lightgreen">
+          <h1>6 - Carousel Widget</h1>
+        </div> 
 
         <div class="center-all">
-          <carousel-wc maxw="80rem" maxh="45rem" infinite="true">
+          <carousel-wc maxw="80rem" minh="25rem" maxh="45rem" popup="true">
             <span slot="slides">
               <image-wc src="https://picsum.photos/600/390" alt="carousel image"></image-wc>
               <image-wc src="https://picsum.photos/600/410" alt="carousel image"></image-wc>
               <image-wc src="https://picsum.photos/605/400" alt="carousel image"></image-wc>
               <image-wc src="https://picsum.photos/600/408" alt="carousel image"></image-wc>
               <image-wc src="https://picsum.photos/610/400" alt="carousel image"></image-wc>
+              <image-wc src="https://picsum.photos/599/390" alt="carousel image"></image-wc>
+              <image-wc src="https://picsum.photos/609/402" alt="carousel image"></image-wc>
+              <image-wc src="https://picsum.photos/600/390" alt="carousel image"></image-wc>
+              <image-wc src="https://picsum.photos/600/410" alt="carousel image"></image-wc>
+              <image-wc src="https://picsum.photos/605/400" alt="carousel image"></image-wc>
+              <image-wc src="https://picsum.photos/600/408" alt="carousel image"></image-wc>
+              <image-wc src="https://picsum.photos/610/400" alt="carousel image"></image-wc>
+              <image-wc src="https://picsum.photos/599/390" alt="carousel image"></image-wc>
+              <image-wc src="https://picsum.photos/609/402" alt="carousel image"></image-wc>
+            </span>
+          </carousel-wc>
+        </div>
+
+        <div style="width: 100%; height: 15vh; background: lightgreen"></div>
+
+        <div class="center-all">
+          <carousel-wc maxw="120rem" minh="25rem" maxh="45rem" infinite="true" slide-view-rows="1,2,2" slide-view-columns="1,2,3" arrows-wrap="#top-arrows" dots-wrap="#top-dots" dots-type="dots" popup="true">
+            <span slot="slides">
+              <image-wc src="https://picsum.photos/600/390" alt="carousel image" title="sup sup"></image-wc>
+              <image-wc src="https://picsum.photos/600/410" alt="carousel image"></image-wc>
+              <image-wc src="https://picsum.photos/605/400" alt="carousel image"></image-wc>
+              <image-wc src="https://picsum.photos/600/408" alt="carousel image"></image-wc>
+              <image-wc src="https://picsum.photos/610/400" alt="carousel image"></image-wc>
+              <image-wc src="https://picsum.photos/599/390" alt="carousel image"></image-wc>
+              <image-wc src="https://picsum.photos/600/409" alt="carousel image" title="yeah that's right"></image-wc>
+              <image-wc src="https://picsum.photos/604/400" alt="carousel image"></image-wc>
+              <image-wc src="https://picsum.photos/600/407" alt="carousel image"></image-wc>
+              <image-wc src="https://picsum.photos/609/400" alt="carousel image"></image-wc>
+              <image-wc src="https://picsum.photos/600/406" alt="carousel image"></image-wc>
+              <image-wc src="https://picsum.photos/609/402" alt="carousel image"></image-wc>
+            </span>
+          </carousel-wc>
+        </div>
+
+        <div style="width: 100%; height: 15vh; background: lightgreen">
+          <div id="top-arrows">
+            &nbsp;
+            <a class="prev"> &lt; </a>
+            &nbsp;
+            <span id="top-dots"></span>
+            &nbsp;
+            <a class="next"> &gt; </a>
+            &nbsp;
+          </div>
+          
+        </div>
+
+        <div class="center-all">
+          <carousel-wc maxw="80rem" minh="65rem" infinite="true" slide-view-columns="1,2,3">
+            <span slot="slides">
+              <hello-world></hello-world>
+              <image-wc src="https://picsum.photos/605/400" alt="carousel image"></image-wc>
+              <hello-world></hello-world>
+              <image-wc src="https://picsum.photos/610/400" alt="carousel image"></image-wc>
+              <hello-world></hello-world>
+              <image-wc src="https://picsum.photos/612/400" alt="carousel image"></image-wc>
             </span>
           </carousel-wc>
         </div>
@@ -177,6 +236,8 @@ body {
   text-align: center;
   color: #2c3e50;
   box-sizing: border-box;
+
+  * { box-sizing: border-box; }
 }
 
 .fillParent {
@@ -188,6 +249,7 @@ body {
 }
 
 .center-all {
+  width: 100%;
   display: grid;
   align-items: center;
   justify-content: center;
@@ -219,6 +281,7 @@ body {
 
 #hero h1 {     
   mix-blend-mode: difference;
+  color: white;
   font-size: 15vmin; 
 }
 
@@ -241,11 +304,54 @@ body {
 
 .side-by-side {
   padding: 2rem;
+  position: relative;
   display: grid;
-  grid-template-rows: minmax(50rem, auto);
+  grid-template-rows: minmax(50rem, 1fr);
 
   > * {
+    max-height: 100%;
     margin: auto;
+  }
+}
+
+#top-arrows {
+  font-size: 5rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  .next,
+  .prev { cursor: pointer; }
+}
+
+#top-dots {
+  display: block;
+  position: relative;
+}
+
+.dots {
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  list-style: none;
+
+  .dot {
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    margin: 15px;
+    background-color: #2c3e50;
+    cursor: pointer;
+    transform: scale(1);
+    transform-origin: center;
+    transition: 0.3s;
+
+    &.active {
+      background-color: #41B883;
+      transform: scale(1.5);
+    }
   }
 }
 
