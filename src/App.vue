@@ -1,7 +1,9 @@
 <template>
   <div id="app">
 
+    <!-- HEADER -->
     <header id="header">
+    <!-- logo -->
       <div class="logo">
         <anchor-wc class="logo-link" sps="true" url="#hero" atitle="Home">
           <span slot="prefix">
@@ -9,9 +11,8 @@
           </span>
         </anchor-wc>
       </div>
-
+    <!-- navigation -->
       <nav>
-
         <anchor-wc aid="page1Nav" class="nav-link" sps="true" url="#page1" lbl="Images">
           <span slot="prefix"><i class="fa-sharp fa-solid fa-star"></i></span>
         </anchor-wc>
@@ -34,11 +35,9 @@
 
         <anchor-wc aid="page6Nav" class="nav-link" sps="true" url="#page6" lbl="Carousel">
           <span slot="prefix"><i class="fa-sharp fa-solid fa-star"></i></span>
-        </anchor-wc>
-
-        
+        </anchor-wc>        
       </nav>
-
+    <!-- cta and info -->
       <div class="ctas">
         <anchor-wc aid="external" classes="btn" url="https://google.com#location3" lbl="(external)"></anchor-wc>
         <anchor-wc aid="internal" class="nav-link" sps="true" url="#location1" lbl="(internal)">
@@ -46,9 +45,9 @@
         </anchor-wc>
       </div>
     </header>
-
+    <!-- WRAPPER -->
     <div id="wrapper">
-
+      <!-- hero banner -->
       <div id="hero" style="width: 100%; height: 100vh; background: lightgray">
         <image-wc fit="cover" src="https://picsum.photos/1200/800,,,https://picsum.photos/1920/1080" alt="banner image"></image-wc>
         <div class="fillParent center-all"><h1>My Vue<br>Components<br>Library</h1></div>
@@ -117,7 +116,7 @@
         </div> 
 
         <div class="center-all">
-          <carousel-wc maxw="80rem" minh="25rem" maxh="45rem">
+          <carousel-wc maxw="80rem" minh="25rem" maxh="45rem" popup="true">
             <span slot="slides">
               <image-wc src="https://picsum.photos/600/390" alt="carousel image"></image-wc>
               <image-wc src="https://picsum.photos/600/410" alt="carousel image"></image-wc>
@@ -140,15 +139,15 @@
         <div style="width: 100%; height: 15vh; background: lightgreen"></div>
 
         <div class="center-all">
-          <carousel-wc maxw="120rem" minh="25rem" maxh="45rem" infinite="true" slide-view-rows="1,2,2" slide-view-columns="1,2,3" arrows-wrap="#top-arrows" dots-wrap="#top-dots" dots-type="dots">
+          <carousel-wc maxw="120rem" minh="25rem" maxh="45rem" infinite="true" slide-view-rows="1,2,2" slide-view-columns="1,2,3" arrows-wrap="#top-arrows" dots-wrap="#top-dots" dots-type="dots" popup="true">
             <span slot="slides">
-              <image-wc src="https://picsum.photos/600/390" alt="carousel image"></image-wc>
+              <image-wc src="https://picsum.photos/600/390" alt="carousel image" title="sup sup"></image-wc>
               <image-wc src="https://picsum.photos/600/410" alt="carousel image"></image-wc>
               <image-wc src="https://picsum.photos/605/400" alt="carousel image"></image-wc>
               <image-wc src="https://picsum.photos/600/408" alt="carousel image"></image-wc>
               <image-wc src="https://picsum.photos/610/400" alt="carousel image"></image-wc>
               <image-wc src="https://picsum.photos/599/390" alt="carousel image"></image-wc>
-              <image-wc src="https://picsum.photos/600/409" alt="carousel image"></image-wc>
+              <image-wc src="https://picsum.photos/600/409" alt="carousel image" title="yeah that's right"></image-wc>
               <image-wc src="https://picsum.photos/604/400" alt="carousel image"></image-wc>
               <image-wc src="https://picsum.photos/600/407" alt="carousel image"></image-wc>
               <image-wc src="https://picsum.photos/609/400" alt="carousel image"></image-wc>
@@ -345,11 +344,13 @@ body {
     margin: 15px;
     background-color: #2c3e50;
     cursor: pointer;
+    transform: scale(1);
+    transform-origin: center;
+    transition: 0.3s;
 
     &.active {
       background-color: #41B883;
       transform: scale(1.5);
-      transform-origin: center;
     }
   }
 }

@@ -1,6 +1,6 @@
 <template>
   <div data-id="carousel" :data-row="sRows" :data-col="sColumns" :data-count="slideCount" :show-arrows="arrowsWrap=='' ? 'true' : 'false'">
-    <div class="carousel-wrap" :style="wrap_styles" @click="onClick" @mousemove="watchMouse">
+    <div class="carousel-wrap" :style="wrap_styles" @mouseup="clickHandler" @mousemove="watchMouse">
       <slot name="slides"></slot>
     </div>
     <div class="dots" :data-count="slideCount" :data-curr="currIndex+1 + '/'" :show-dots="dotsWrap =='' ? 'true' : 'false'"></div>
@@ -9,6 +9,8 @@
 </template>
 
 <script>
+
+
 export default {
   name: 'CarouselWc',
 
@@ -28,6 +30,7 @@ export default {
       minHeight: '0',
       alignment: '',
       sColumns: '',
+      sRows: '',
       timeout: null,
       loadObserver: null,
       mouseStalker: null,
@@ -41,6 +44,7 @@ export default {
       currWidth: 0,
       currLeft: 0,
       currIndex: 0,
+      popIndex: 0,
       scrollTimeout: 0,
       scrolling: false
     }
@@ -58,7 +62,8 @@ export default {
     arrowsWrap: { default: '', type: String },
     dotsWrap: { default: '', type: String },
     dotsType: { default: '', type: String },
-    infinite: { default: '', type: String }
+    infinite: { default: '', type: String },
+    popup: { default: '', type: String }
   },
 
   computed: {
@@ -87,7 +92,8 @@ export default {
     this.getBreakPointValues()
     this.carouselWrap.addEventListener('scroll', this.onScroll)
     window.addEventListener('resize', this.onResize)
-    this.loadObserver.observe(this.$el);
+    this.loadObserver.observe(this.$el)
+    this.$el.addEventListener('contextmenu', (e) => { e.preventDefault(); return false; })
   },
 
   beforeDestroy() { 
@@ -130,7 +136,21 @@ export default {
     },
     lazyLoader(parent) {
       let imgset = parent.querySelectorAll('img')
-      for (var i=0; i< imgset.length; i++) if (imgset[i].getAttribute('data-src')) imgset[i].setAttribute('src', imgset[i].getAttribute('data-src'))
+      for (var i=0; i< imgset.length; i++) {
+        if (imgset[i].getAttribute('data-src')) {
+          imgset[i].setAttribute('src', imgset[i].getAttribute('data-src'))
+          imgset[i].classList.add('loaded')
+        }
+      }
+    },
+    showCaption(img) {
+      let imgTitle = img.getAttribute('title') || null
+      if (imgTitle) {
+        let theCap = document.createElement('caption')
+        theCap.setAttribute('style','width:100%;color:white;')
+        theCap.innerText = imgTitle
+        img.parentNode.append(theCap)
+      }
     },
     onClick() {
       this.setDims()
@@ -145,10 +165,10 @@ export default {
             setTimeout(() => { 
               this.carouselWrap.classList.remove('over-next')
               this.$el.querySelector('.clone-next').classList.remove('over-next')
-              window.requestAnimationFrame( this.carouselWrap.scrollTo({ left: 0, behavior: 'auto' }) )
+              window.requestAnimationFrame(() => { this.carouselWrap.scrollTo({ left: 0, behavior: 'auto' }) })
             }, 250)
           }
-          else window.requestAnimationFrame( this.carouselWrap.scrollTo({ left: this.currLeft+this.currWidth, behavior: 'smooth' }) )
+          else window.requestAnimationFrame(() => { this.carouselWrap.scrollTo({ left: this.currLeft+this.currWidth, behavior: 'smooth' }) })
         }
         if (this.move == 'prev') {
           if (this.currIndex == 0 && this.infinite == 'true') {
@@ -160,10 +180,21 @@ export default {
             setTimeout(() => {
               this.carouselWrap.classList.remove('over-prev')
               this.$el.querySelector('.clone-prev').classList.remove('over-prev')
-              window.requestAnimationFrame( this.carouselWrap.scrollTo({ left: this.scrollWidth-this.currWidth, behavior: 'auto' }) )
+              window.requestAnimationFrame(() => {  this.carouselWrap.scrollTo({ left: this.scrollWidth-this.currWidth, behavior: 'auto' }) })
             }, 250)
           }
-          else window.requestAnimationFrame( this.carouselWrap.scrollTo({ left: this.currLeft-this.currWidth, behavior: 'smooth' }) )
+          else window.requestAnimationFrame(() => {  this.carouselWrap.scrollTo({ left: this.currLeft-this.currWidth, behavior: 'smooth' }) })
+        }
+      }
+    },
+    dblClick(e) {
+      let theSrc = e.target.hasAttribute('src') ? e.target.getAttribute('src') : null
+      for (var x=0;x<this.carouselSlides.children.length;x++) {
+        let idxSrc = this.carouselSlides.children[x].hasAttribute('data-src') ? this.carouselSlides.children[x].getAttribute('data-src') : null
+        if (theSrc && idxSrc) if (theSrc === idxSrc) {
+          this.popIndex = x
+          if (this.displayWidth > this.bp_sm) return this.buildPopup(x)
+          else return window.open( theSrc )
         }
       }
     },
@@ -172,13 +203,18 @@ export default {
       if (this.currIndex != idx) {
         if (idx > this.currIndex) {
           let offset = this.currLeft + ((idx-this.currIndex) * this.currWidth)
-          window.requestAnimationFrame( this.carouselWrap.scrollTo({ left: offset, behavior: 'smooth' }) )
+          window.requestAnimationFrame(() => {  this.carouselWrap.scrollTo({ left: offset, behavior: 'smooth' }) })
         }
         if (idx < this.currIndex) {
           let offset = this.currLeft - ((this.currIndex-idx) * this.currWidth)
-          window.requestAnimationFrame( this.carouselWrap.scrollTo({ left: offset, behavior: 'smooth' }) )
+          window.requestAnimationFrame(() => { this.carouselWrap.scrollTo({ left: offset, behavior: 'smooth' }) })
         }
       }
+    },
+    clickHandler(e) {
+      e.preventDefault()
+      if (e.which === 1 || e.button === 1) if (this.arrowsWrap == '') this.onClick()
+      if (e.which === 3 || e.button === 2) if (this.popup == 'true') this.dblClick(e)
     },
     setCarouselElements() {
       if (this.carouselWrap == null) this.carouselWrap = this.$el.querySelector('.carousel-wrap')
@@ -232,6 +268,44 @@ export default {
       }
       if (this.arrowsWrap != '') this.bindArrows()
       if (this.arrowsWrap != '') this.bindDots()
+    },
+    buildPopup(idx) {
+      let popModal = document.createElement('div')
+      popModal.classList.add('carousel-modal')
+      popModal.setAttribute("style","width:100%;height:100%;position:fixed;top:0;left:0;background:rgba(0,0,0,0.8);display:grid;z-index:9999;")
+      let popTemplate = `
+          <div class="modal-count" style="width:100px;height:40px;border-radius:20px;position:absolute;top:20px;left:calc(50% - 50px);background:rgba(255,255,255,0.3);color:white;font-size:20px;display:flex;justify-content:center;align-items:center;"></div>
+          <div class="modal-close" style="width:40px;height:40px;border-radius:50%;position:absolute;top:20px;right:20px;background:rgba(255,255,255,0.3);color:white;font-size:20px;display:flex;justify-content:center;align-items:center;">&times;</div>
+          <div class="modal-prev" style="width:40px;height:40px;border-radius:50%;position:absolute;top:calc(50% - 20px);left:20px;background:rgba(255,255,255,0.3);color:white;font-size:20px;display:flex;justify-content:center;align-items:center;">&lt;</div>
+          <div class="modal-img" style="max-width:calc(100% - 100px);max-height:calc(100% - 100px);margin:auto;"></div>  
+          <div class="modal-next" style="width:40px;height:40px;border-radius:50%;position:absolute;top:calc(50% - 20px);right:20px;background:rgba(255,255,255,0.3);color:white;font-size:20px;display:flex;justify-content:center;align-items:center;">&gt;</div>
+      `
+      if (document.querySelectorAll('.carousel-modal').length === 0) {
+        document.body.append(popModal)
+        let theModal = document.querySelector('.carousel-modal')
+        theModal.innerHTML = popTemplate
+        theModal.querySelector('.modal-img').append(this.carouselSlides.children[idx].cloneNode(true))
+        theModal.querySelector('.modal-count').innerHTML = `${idx+1} / ${this.carouselSlides.children.length}`
+        this.lazyLoader(theModal.querySelector('.modal-img'))
+        this.showCaption(theModal.querySelector('.modal-img > img'))
+        theModal.querySelector('.modal-close').addEventListener('click', () => { document.querySelector('.carousel-modal').remove() })
+        theModal.querySelector('.modal-prev').addEventListener('click', () => { 
+          theModal.querySelector('.modal-img').innerHTML = '' 
+          this.popIndex = this.popIndex-1 < 1 ? 0 : this.popIndex-1
+          theModal.querySelector('.modal-img').append(this.carouselSlides.children[this.popIndex].cloneNode(true))
+          theModal.querySelector('.modal-count').innerHTML = `${this.popIndex+1} / ${this.carouselSlides.children.length}`
+          this.lazyLoader(theModal.querySelector('.modal-img'))
+          this.showCaption(theModal.querySelector('.modal-img > img'))
+        })
+        theModal.querySelector('.modal-next').addEventListener('click', () => { 
+          theModal.querySelector('.modal-img').innerHTML = '' 
+          this.popIndex = this.popIndex+1 == this.carouselSlides.children.length ? this.popIndex : this.popIndex+1
+          theModal.querySelector('.modal-img').append(this.carouselSlides.children[this.popIndex].cloneNode(true))
+          theModal.querySelector('.modal-count').innerHTML = `${this.popIndex+1} / ${this.carouselSlides.children.length}`
+          this.lazyLoader(theModal.querySelector('.modal-img'))
+          this.showCaption(theModal.querySelector('.modal-img > img'))
+        })
+      }
     },
     getBreakPointValues() {
       // set user input property values by breakpoint
@@ -297,24 +371,35 @@ export default {
         if (theNext) theNext.addEventListener('click', () => { this.move = 'next'; this.onClick() })
       }
     },
-    bindDots() {
+    bindDots(redo = false) {
       let theWrap = document.querySelector(this.dotsWrap)
-      theWrap.innerHTML = ''
-      if (this.dotsType != 'dots') {
-        theWrap.innerHTML = `<span>${this.currIndex+1}</span><span>/</span><span>${this.slideCount}</span>`
-      } else {
-        let theDots = document.createElement('ul')
-        theDots.classList.add('dots')
-        for (var d=0; d<this.slideCount; d++) {
-          let theDot = document.createElement('li')
-          theDot.classList.add('dot')
-          theDot.setAttribute('data-idx',d)
-          if (d==this.currIndex) { theDot.classList.add('active') }
-          theDots.append(theDot)
-          theDot.addEventListener('click', (e) => { this.goTo( parseInt(e.target.getAttribute('data-idx')) ) })
+      if (theWrap.innerHTML == '' || redo) {
+        theWrap.innerHTML = ''
+        if (this.dotsType != 'dots') {
+          theWrap.innerHTML = `<span>${this.currIndex+1}</span><span>/</span><span>${this.slideCount}</span>`
+        } else {
+          let theDots = document.createElement('ul')
+          theDots.classList.add('dots')
+          for (var d=0; d<this.slideCount; d++) {
+            let theDot = document.createElement('li')
+            theDot.classList.add('dot')
+            theDot.setAttribute('data-idx',d)
+            if (d==this.currIndex) { theDot.classList.add('active') }
+            theDots.append(theDot)
+            theDot.addEventListener('click', (e) => { this.goTo( parseInt(e.target.getAttribute('data-idx')) ) })
+          }
+          theWrap.append(theDots)
         }
-        theWrap.append(theDots)
       }
+    },
+    updateDots() {
+      if (this.dotsType == 'dots') {
+        this.setDims()
+        let theWrap = document.querySelector(this.dotsWrap)
+        let theDots = theWrap.querySelectorAll('.dot')
+        theDots.forEach((d) => { d.classList.remove('active') })
+        theDots[this.currIndex].classList.add('active')
+      } else { this.bindDots(true) }
     }
   },
 
@@ -339,9 +424,10 @@ export default {
       if (this.currIndex == this.slideCount-1) theSlug = 'index-end'
       for (let x=0; x<theSlides.length; x++) { theSlides[x].classList.remove('active') }
       theSlides[this.currIndex].classList.add('active')
-      if (theSlug != "") this.mouseStalker.classList.add(theSlug)
-      this.bindDots()
-    }
+      if (theSlug != '') this.mouseStalker.classList.add(theSlug)
+      if (this.dotsWrap != '') this.updateDots()
+    },
+    slideCount() { if (this.dotsWrap != '') this.bindDots(true) }
   }
 }
 </script>
@@ -433,14 +519,8 @@ export default {
       }
     }
 
-    &[data-count="1"] .mouse-stalker { display: none; }
-    &[show-arrows="false"] {
-      pointer-events: none;
-
-      .slide *:not(img) { pointer-events: auto; }
-
-      .mouse-stalker { display: none; }
-    }
+    &[data-count="1"] .mouse-stalker,
+    &[show-arrows="false"] .mouse-stalker { display: none; }
 
     .carousel-wrap {
       width: 100%;
