@@ -402,7 +402,9 @@ export default {
     },
     bindSlides() {
       let theCarousel = this.$el
+      let theStyles = this.shadowRoot ? this.shadowRoot.querySelector('style') : null
       let theTarget = document.querySelector(this.slidesWrap)
+      theTarget.appendChild(theStyles)
       theTarget.appendChild(theCarousel)
     },
     updateDots() {
@@ -460,7 +462,7 @@ export default {
   }
 
   [data-id="carousel"] {
-    width: 100%; 
+    width: auto; 
     height: auto; 
     position: relative;
     overflow: hidden;
@@ -595,7 +597,7 @@ export default {
         opacity: 1;
       }
 
-      > img, div {
+      > img, > div {
         width: 100%;
         height: 100%;
         border-radius: 0;
