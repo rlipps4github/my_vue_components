@@ -1,5 +1,5 @@
 <template>
-  <div data-id="carousel" :data-row="sRows" :data-col="sColumns" :data-count="slideCount" :show-arrows="arrowsWrap=='' ? 'true' : 'false'">
+  <div data-id="carousel" :data-row="sRows" :data-col="sColumns" :data-count="slideCount" :show-arrows="arrowsWrap=='' ? 'true' : 'false'" :data-modal="popup">
     <div class="carousel-wrap" :style="wrap_styles" @mouseup="clickHandler" @mousemove="watchMouse">
       <slot name="slides"></slot>
     </div>
@@ -57,13 +57,16 @@ export default {
     minh: { default: '', type: String },
     slideViewColumns: { default: '1', type: String },
     slideViewRows: { default: '1', type: String },
+    slideViewGap: { default: '0', type: String },
     align: { default: 'left', type: String },
     transition: { default: 'fade', type: String },
     arrowsWrap: { default: '', type: String },
     dotsWrap: { default: '', type: String },
     dotsType: { default: '', type: String },
     infinite: { default: '', type: String },
-    popup: { default: '', type: String }
+    popup: { default: '', type: String },
+    slidesWrap: { default: '', type: String },
+    autoAdvance: { default: '', type: String }
   },
 
   computed: {
@@ -162,6 +165,7 @@ export default {
               this.lazyLoader(this.$el.querySelector('.clone-next').querySelector('.slide'))
             this.carouselWrap.classList.add('over-next')
             this.$el.querySelector('.clone-next').classList.add('over-next')
+            this.$el.querySelector('.clone-next').setAttribute('style', `grid-gap: ${this.slideViewGap};`)
             setTimeout(() => { 
               this.carouselWrap.classList.remove('over-next')
               this.$el.querySelector('.clone-next').classList.remove('over-next')
@@ -177,6 +181,7 @@ export default {
               this.lazyLoader(this.$el.querySelector('.clone-prev').querySelector('.slide')) 
             this.carouselWrap.classList.add('over-prev')
             this.$el.querySelector('.clone-prev').classList.add('over-prev')
+            this.$el.querySelector('.clone-prev').setAttribute('style', `grid-gap: ${this.slideViewGap};`)
             setTimeout(() => {
               this.carouselWrap.classList.remove('over-prev')
               this.$el.querySelector('.clone-prev').classList.remove('over-prev')
@@ -257,6 +262,7 @@ export default {
             else theSlide.appendChild(blank)
           }
           this.lazyLoader(theSlide)
+          theSlide.setAttribute('style', `grid-gap: ${this.slideViewGap};`)
           this.carouselWrap.appendChild(theSlide)
           this.slideCount = this.slideCount + 1
           isActive++ 
@@ -266,8 +272,10 @@ export default {
           this.$el.insertBefore(prevClone, this.carouselWrap.nextSibling)
         }
       }
-      if (this.arrowsWrap != '') this.bindArrows()
-      if (this.arrowsWrap != '') this.bindDots()
+      if (this.arrowsWrap != '' && this.arrowsWrap != 'off') this.bindArrows()
+      if (this.dotsWrap != '' && this.dotsWrap != 'off') this.bindDots()
+      if (this.slidesWrap != '') this.bindSlides()
+      if (this.autoAdvance != '') this.autoPlay()
     },
     buildPopup(idx) {
       let popModal = document.createElement('div')
@@ -276,9 +284,9 @@ export default {
       let popTemplate = `
           <div class="modal-count" style="width:100px;height:40px;border-radius:20px;position:absolute;top:20px;left:calc(50% - 50px);background:rgba(255,255,255,0.3);color:white;font-size:20px;display:flex;justify-content:center;align-items:center;"></div>
           <div class="modal-close" style="width:40px;height:40px;border-radius:50%;position:absolute;top:20px;right:20px;background:rgba(255,255,255,0.3);color:white;font-size:20px;display:flex;justify-content:center;align-items:center;">&times;</div>
-          <div class="modal-prev" style="width:40px;height:40px;border-radius:50%;position:absolute;top:calc(50% - 20px);left:20px;background:rgba(255,255,255,0.3);color:white;font-size:20px;display:flex;justify-content:center;align-items:center;">&lt;</div>
+          <div class="modal-prev" style="width:40px;height:30px;border-radius:50%;position:absolute;top:calc(50% - 20px);left:20px;background:rgba(255,255,255,0.3);color:white;font-size:20px;display:flex;justify-content:center;align-items:center;transform:scaleY(133%);">&lt;</div>
           <div class="modal-img" style="max-width:calc(100% - 100px);max-height:calc(100% - 100px);margin:auto;"></div>  
-          <div class="modal-next" style="width:40px;height:40px;border-radius:50%;position:absolute;top:calc(50% - 20px);right:20px;background:rgba(255,255,255,0.3);color:white;font-size:20px;display:flex;justify-content:center;align-items:center;">&gt;</div>
+          <div class="modal-next" style="width:40px;height:30px;border-radius:50%;position:absolute;top:calc(50% - 20px);right:20px;background:rgba(255,255,255,0.3);color:white;font-size:20px;display:flex;justify-content:center;align-items:center;transform:scaleY(133%);">&gt;</div>
       `
       if (document.querySelectorAll('.carousel-modal').length === 0) {
         document.body.append(popModal)
@@ -291,7 +299,7 @@ export default {
         theModal.querySelector('.modal-close').addEventListener('click', () => { document.querySelector('.carousel-modal').remove() })
         theModal.querySelector('.modal-prev').addEventListener('click', () => { 
           theModal.querySelector('.modal-img').innerHTML = '' 
-          this.popIndex = this.popIndex-1 < 1 ? 0 : this.popIndex-1
+          this.popIndex = this.popIndex-1 < 0 ? this.carouselSlides.children.length-1 : this.popIndex-1
           theModal.querySelector('.modal-img').append(this.carouselSlides.children[this.popIndex].cloneNode(true))
           theModal.querySelector('.modal-count').innerHTML = `${this.popIndex+1} / ${this.carouselSlides.children.length}`
           this.lazyLoader(theModal.querySelector('.modal-img'))
@@ -299,7 +307,7 @@ export default {
         })
         theModal.querySelector('.modal-next').addEventListener('click', () => { 
           theModal.querySelector('.modal-img').innerHTML = '' 
-          this.popIndex = this.popIndex+1 == this.carouselSlides.children.length ? this.popIndex : this.popIndex+1
+          this.popIndex = this.popIndex+1 == this.carouselSlides.children.length ? 0 : this.popIndex+1
           theModal.querySelector('.modal-img').append(this.carouselSlides.children[this.popIndex].cloneNode(true))
           theModal.querySelector('.modal-count').innerHTML = `${this.popIndex+1} / ${this.carouselSlides.children.length}`
           this.lazyLoader(theModal.querySelector('.modal-img'))
@@ -392,14 +400,26 @@ export default {
         }
       }
     },
+    bindSlides() {
+      let theCarousel = this.$el
+      let theTarget = document.querySelector(this.slidesWrap)
+      theTarget.appendChild(theCarousel)
+    },
     updateDots() {
-      if (this.dotsType == 'dots') {
+      if (this.dotsType == 'dots' && this.dotsWrap != '' ) {
         this.setDims()
         let theWrap = document.querySelector(this.dotsWrap)
         let theDots = theWrap.querySelectorAll('.dot')
         theDots.forEach((d) => { d.classList.remove('active') })
         theDots[this.currIndex].classList.add('active')
       } else { this.bindDots(true) }
+    },
+    autoPlay() {
+      if (!this.$el.matches(':hover')) {  
+        this.move = 'next'
+        this.onClick()
+      }
+      setTimeout(this.autoPlay, `${parseInt(this.autoAdvance)*1000}`)
     }
   },
 
@@ -425,9 +445,9 @@ export default {
       for (let x=0; x<theSlides.length; x++) { theSlides[x].classList.remove('active') }
       theSlides[this.currIndex].classList.add('active')
       if (theSlug != '') this.mouseStalker.classList.add(theSlug)
-      if (this.dotsWrap != '') this.updateDots()
+      if (this.dotsWrap != '' && this.dotsWrap != 'off') this.updateDots()
     },
-    slideCount() { if (this.dotsWrap != '') this.bindDots(true) }
+    slideCount() { if (this.dotsWrap != '' && this.dotsWrap != 'off') this.bindDots(true) }
   }
 }
 </script>
@@ -469,9 +489,7 @@ export default {
       }
 
       > .slide {
-        display: flex;
-        justify-content: center;
-        align-items: center;
+        display: grid;
       }
     }
 
@@ -495,11 +513,16 @@ export default {
     }
 
     &:hover .mouse-stalker {
-      opacity: 1;
+      &.m-next,
+      &.m-prev {
+        opacity: 1;
+      }
+
       &.m-next::before { 
         content: '\003E'; 
         transform: scaleY(1.5); 
       }
+
       &.m-prev::before { 
         content: '\003C'; 
         transform: scaleY(1.5); 
@@ -551,19 +574,20 @@ export default {
     }
 
     .slide {
-      width: 100%;
+      min-width: 100%;
       max-height: 100%;
       border-radius: 50%;
+      position: relative;
       background: linear-gradient(100deg,#b3b3b3, #555454, #b3b3b3 , #515252,#b3b3b3, #555554);
       background-size: 600% 100%;
       background-clip: border-box;
       animation: gradient 5s linear infinite;
       animation-direction: alternate;
       opacity: 0.15;
-      flex: 0 0 100%;
-      flex-wrap: wrap;
       scroll-snap-align: center;
-      display: flex;
+      display: grid;
+      grid-template-rows: 1fr;
+      grid-template-columns: 1fr;
 
       &:not(:empty) { 
         border-radius: 0;
@@ -577,46 +601,46 @@ export default {
         border-radius: 0;
         object-fit: cover !important;
         opacity: 1;
+        transition: 0.3s;
       }
     }
 
-    &[data-row="2"] .slide > img,
-    &[data-row="2"] .slide > div { height: 50%; }
-    &[data-row="3"] .slide > img,
-    &[data-row="3"] .slide > div { height: 33.33%; }
-    &[data-row="4"] .slide > img,
-    &[data-row="4"] .slide > div { height: 25%; }
-    &[data-row="5"] .slide > img,
-    &[data-row="5"] .slide > div { height: 20%; }
-    &[data-row="6"] .slide > img,
-    &[data-row="6"] .slide > div { height: 16.66%; }
-    &[data-row="7"] .slide > img,
-    &[data-row="7"] .slide > div { height: 14.28%; }
-    &[data-row="8"] .slide > img,
-    &[data-row="8"] .slide > div { height: 12.5%; }
-    &[data-row="9"] .slide > img,
-    &[data-row="9"] .slide > div { height: 11.11%; }
-    &[data-row="10"] .slide > img,
-    &[data-row="10"] .slide > div { height: 10%; }
+    &[data-row="2"] .slide { grid-template-rows: repeat(2, 1fr); }
+    &[data-row="3"] .slide { grid-template-rows: repeat(3, 1fr); }
+    &[data-row="4"] .slide { grid-template-rows: repeat(4, 1fr); }
+    &[data-row="5"] .slide { grid-template-rows: repeat(5, 1fr); }
+    &[data-row="6"] .slide { grid-template-rows: repeat(6, 1fr); }
+    &[data-row="7"] .slide { grid-template-rows: repeat(7, 1fr); }
+    &[data-row="8"] .slide { grid-template-rows: repeat(8, 1fr); }
+    &[data-row="9"] .slide { grid-template-rows: repeat(9, 1fr); }
+    &[data-row="10"] .slide { grid-template-rows: repeat(10, 1fr); }
 
-    &[data-col="2"] .slide > img,
-    &[data-col="2"] .slide > div { width: 50%; }
-    &[data-col="3"] .slide > img,
-    &[data-col="3"] .slide > div { width: 33.33%; }
-    &[data-col="4"] .slide > img,
-    &[data-col="4"] .slide > div { width: 25%; }
-    &[data-col="5"] .slide > img,
-    &[data-col="5"] .slide > div { width: 20%; }
-    &[data-col="6"] .slide > img,
-    &[data-col="6"] .slide > div { width: 16.66%; }
-    &[data-col="7"] .slide > img,
-    &[data-col="7"] .slide > div { width: 14.28%; }
-    &[data-col="8"] .slide > img,
-    &[data-col="8"] .slide > div { width: 12.5%; }
-    &[data-col="9"] .slide > img,
-    &[data-col="9"] .slide > div { width: 11.11%; }
-    &[data-col="10"] .slide > img,
-    &[data-col="10"] .slide > div { width: 10%; }
+    &[data-col="2"] .slide { grid-template-columns: repeat(2, 1fr); }
+    &[data-col="3"] .slide { grid-template-columns: repeat(3, 1fr); }
+    &[data-col="4"] .slide { grid-template-columns: repeat(4, 1fr); }
+    &[data-col="5"] .slide { grid-template-columns: repeat(5, 1fr); }
+    &[data-col="6"] .slide { grid-template-columns: repeat(6, 1fr); }
+    &[data-col="7"] .slide { grid-template-columns: repeat(7, 1fr); }
+    &[data-col="8"] .slide { grid-template-columns: repeat(8, 1fr); }
+    &[data-col="9"] .slide { grid-template-columns: repeat(9, 1fr); }
+    &[data-col="10"] .slide { grid-template-columns: repeat(10, 1fr); }
+
+    &[data-modal="true"] .slide:hover {
+      &::before {
+        content: url("data:image/svg+xml,%3Csvg enable-background='new 0 0 417.031 417.031' width='36' height='30' viewBox='0 0 417.031 417.031' fill='white' stroke-color='white' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='m219.683 92.146c-.279-.315-.52-.627-.849-.925-3.644-3.272-3.742-2.306.247-5.983 2.955-2.712 6.541-4.834 9.79-7.18 8.596-6.213 14.254-14.534 18.079-24.399 8.582-22.15-16.706-37.453-29.396-50.562-9.168-9.485-23.603 4.982-14.444 14.447 7.076 7.325 16.19 13.264 22.349 21.407 6.897 9.116-3.613 19.174-10.814 24.249-11.133 7.844-20.757 18.262-18.533 29.434-49.964 4.668-96.16 32.052-96.16 80.327v135.51c0 59.862 48.698 108.562 108.564 108.562 59.863 0 108.566-48.7 108.566-108.562v-135.521c.003-52.703-49.032-78.227-97.399-80.804zm-99.292 80.804c0-35.833 38.898-56.581 79.186-60.027v124.982c-36.751-1.85-66.589-10.222-79.186-14.309zm176.257 135.511c0 48.604-39.537 88.133-88.129 88.133-48.59 0-88.128-39.529-88.128-88.133v-63.381c18.249 5.516 52.6 13.882 93.202 13.882 26.003 0 54.556-3.479 83.056-13.286v62.785zm0-84.521c-25.844 9.883-52.237 13.746-76.635 14.271v-125.59c39.407 2.363 76.635 21.264 76.635 60.337zm-6.913-7.737s-46.688 13.073-62.567 10.271v-103.661c42.261 7.94 69.457 20.72 62.567 93.39z'/%3E%3C/svg%3E");
+        padding: 5px;
+        border-radius: 25px;
+        position: absolute;
+        top: 30px;
+        right: 30px;
+        background: rgba(0,0,0,0.33);
+        pointer-events: none;
+        z-index: 20;
+      }
+    }
+
+    &[data-modal="true"]:not([data-row="1"][data-col="1"]) .slide:hover img:hover { filter: brightness(0.66); }
+
 
     .dots {
       padding: 5px 10px;

@@ -116,7 +116,7 @@
         </div> 
 
         <div class="center-all">
-          <carousel-wc maxw="80rem" minh="25rem" maxh="45rem" popup="true">
+          <carousel-wc maxw="80rem" minh="25rem" maxh="45rem" popup="true" dots-wrap="" auto-advance="10" infinite="true">
             <span slot="slides">
               <image-wc src="https://picsum.photos/600/390" alt="carousel image"></image-wc>
               <image-wc src="https://picsum.photos/600/410" alt="carousel image"></image-wc>
@@ -126,10 +126,10 @@
               <image-wc src="https://picsum.photos/599/390" alt="carousel image"></image-wc>
               <image-wc src="https://picsum.photos/609/402" alt="carousel image"></image-wc>
               <image-wc src="https://picsum.photos/600/390" alt="carousel image"></image-wc>
-              <image-wc src="https://picsum.photos/600/410" alt="carousel image"></image-wc>
-              <image-wc src="https://picsum.photos/605/400" alt="carousel image"></image-wc>
+              <image-wc src="https://picsum.photos/600/411" alt="carousel image"></image-wc>
+              <image-wc src="https://picsum.photos/605/402" alt="carousel image"></image-wc>
               <image-wc src="https://picsum.photos/600/408" alt="carousel image"></image-wc>
-              <image-wc src="https://picsum.photos/610/400" alt="carousel image"></image-wc>
+              <image-wc src="https://picsum.photos/610/408" alt="carousel image"></image-wc>
               <image-wc src="https://picsum.photos/599/390" alt="carousel image"></image-wc>
               <image-wc src="https://picsum.photos/609/402" alt="carousel image"></image-wc>
             </span>
@@ -139,7 +139,7 @@
         <div style="width: 100%; height: 15vh; background: lightgreen"></div>
 
         <div class="center-all">
-          <carousel-wc maxw="120rem" minh="25rem" maxh="45rem" infinite="true" slide-view-rows="1,2,2" slide-view-columns="1,2,3" arrows-wrap="#top-arrows" dots-wrap="#top-dots" dots-type="dots" popup="true">
+          <carousel-wc maxw="120rem" minh="25rem" maxh="45rem" infinite="true" slide-view-rows="1,2,2" slide-view-columns="1,2,3" slide-view-gap="15px" arrows-wrap="#top-arrows" dots-wrap="#top-dots" dots-type="dots" popup="true">
             <span slot="slides">
               <image-wc src="https://picsum.photos/600/390" alt="carousel image" title="sup sup"></image-wc>
               <image-wc src="https://picsum.photos/600/410" alt="carousel image"></image-wc>
@@ -171,7 +171,7 @@
         </div>
 
         <div class="center-all">
-          <carousel-wc maxw="80rem" minh="65rem" infinite="true" slide-view-columns="1,2,3">
+          <carousel-wc maxw="80rem" minh="65rem" infinite="true" slide-view-columns="1,2,3" slides-wrap="#html-slides">
             <span slot="slides">
               <hello-world></hello-world>
               <image-wc src="https://picsum.photos/605/400" alt="carousel image"></image-wc>
@@ -181,6 +181,7 @@
               <image-wc src="https://picsum.photos/612/400" alt="carousel image"></image-wc>
             </span>
           </carousel-wc>
+          <div id="html-slides"></div>
         </div>
 
         <div style="width: 100%; height: 15vh; background: lightgreen"></div>
