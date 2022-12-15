@@ -194,8 +194,10 @@ export default {
     },
     dblClick(e) {
       let theSrc = e.target.hasAttribute('src') ? e.target.getAttribute('src') : null
+          theSrc = theSrc == null && e.target.hasAttribute('data-src') ? e.target.getAttribute('data-src') : theSrc
       for (var x=0;x<this.carouselSlides.children.length;x++) {
-        let idxSrc = this.carouselSlides.children[x].hasAttribute('data-src') ? this.carouselSlides.children[x].getAttribute('data-src') : null
+        let idxSrc = this.carouselSlides.children[x].hasAttribute('src') ? this.carouselSlides.children[x].getAttribute('src') : null
+            idxSrc = idxSrc == null && this.carouselSlides.children[x].hasAttribute('data-src') ? this.carouselSlides.children[x].getAttribute('data-src') : idxSrc
         if (theSrc && idxSrc) if (theSrc === idxSrc) {
           this.popIndex = x
           if (this.displayWidth > this.bp_sm) return this.buildPopup(x)
