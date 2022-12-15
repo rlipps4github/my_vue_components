@@ -1,5 +1,5 @@
 <template>
-  <div data-id="carousel" :data-row="sRows" :data-col="sColumns" :data-count="slideCount" :show-arrows="arrowsWrap=='' ? 'true' : 'false'" :data-modal="popup">
+  <div data-id="carousel" :data-row="sRows" :data-col="sColumns" :data-count="slideCount" :show-arrows="arrowsWrap=='' ? 'true' : 'false'" :data-modal="carouselPopup">
     <div class="carousel-wrap" :style="wrap_styles" @mouseup="clickHandler" @mousemove="watchMouse">
       <slot name="slides"></slot>
     </div>
@@ -64,7 +64,7 @@ export default {
     dotsWrap: { default: '', type: String },
     dotsType: { default: '', type: String },
     infinite: { default: '', type: String },
-    popup: { default: '', type: String },
+    carouselPopup: { default: '', type: String },
     slidesWrap: { default: '', type: String },
     autoAdvance: { default: '', type: String }
   },
@@ -219,7 +219,7 @@ export default {
     clickHandler(e) {
       e.preventDefault()
       if (e.which === 1 || e.button === 1) if (this.arrowsWrap == '') this.onClick()
-      if (e.which === 3 || e.button === 2) if (this.popup == 'true') this.dblClick(e)
+      if (e.which === 3 || e.button === 2) if (this.carouselPopup == 'true') this.dblClick(e)
     },
     setCarouselElements() {
       if (this.carouselWrap == null) this.carouselWrap = this.$el.querySelector('.carousel-wrap')
