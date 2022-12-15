@@ -404,7 +404,7 @@ export default {
       let theCarousel = this.$el
       let theStyles = this.shadowRoot ? this.shadowRoot.querySelector('style') : null
       let theTarget = document.querySelector(this.slidesWrap)
-      theTarget.appendChild(theStyles)
+      if (theStyles) theTarget.appendChild(theStyles)
       theTarget.appendChild(theCarousel)
     },
     updateDots() {
