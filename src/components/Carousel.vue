@@ -402,7 +402,7 @@ export default {
     },
     bindSlides() {
       let theCarousel = this.$el
-      let theStyles = this.shadowRoot ? this.shadowRoot.querySelector('style') : null
+      let theStyles = this.$el.parentNode.childNodes[0].nodeName == 'STYLE' ? this.$el.parentNode.childNodes[0] : null
       let theTarget = document.querySelector(this.slidesWrap)
       if (theStyles) theTarget.appendChild(theStyles)
       theTarget.appendChild(theCarousel)
