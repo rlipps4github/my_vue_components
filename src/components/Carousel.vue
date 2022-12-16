@@ -196,8 +196,8 @@ export default {
       let theSrc = e.target.hasAttribute('src') ? e.target.getAttribute('src') : null
           theSrc = theSrc == null && e.target.hasAttribute('data-src') ? e.target.getAttribute('data-src') : theSrc
       for (var x=0;x<this.carouselSlides.children.length;x++) {
-        let idxSrc = this.carouselSlides.children[x].hasAttribute('src') ? this.carouselSlides.children[x].getAttribute('src') : null
-            idxSrc = idxSrc == null && this.carouselSlides.children[x].hasAttribute('data-src') ? this.carouselSlides.children[x].getAttribute('data-src') : idxSrc
+        let idxSrc = this.carouselSlides.children[x].hasAttribute('data-src') ? this.carouselSlides.children[x].getAttribute('data-src') : null
+            idxSrc = idxSrc == null && this.carouselSlides.children[x].hasAttribute('src') ? this.carouselSlides.children[x].getAttribute('src') : idxSrc
         if (theSrc && idxSrc) if (theSrc === idxSrc) {
           this.popIndex = x
           if (this.displayWidth > this.bp_sm) return this.buildPopup(x)
@@ -297,6 +297,7 @@ export default {
         theModal.querySelector('.modal-img').append(this.carouselSlides.children[idx].cloneNode(true))
         theModal.querySelector('.modal-count').innerHTML = `${idx+1} / ${this.carouselSlides.children.length}`
         this.lazyLoader(theModal.querySelector('.modal-img'))
+        theModal.querySelector('.modal-img > img').setAttribute('style','width: 100%;height:100%;fit-content:contain;')
         this.showCaption(theModal.querySelector('.modal-img > img'))
         theModal.querySelector('.modal-close').addEventListener('click', () => { document.querySelector('.carousel-modal').remove() })
         theModal.querySelector('.modal-prev').addEventListener('click', () => { 
@@ -305,6 +306,7 @@ export default {
           theModal.querySelector('.modal-img').append(this.carouselSlides.children[this.popIndex].cloneNode(true))
           theModal.querySelector('.modal-count').innerHTML = `${this.popIndex+1} / ${this.carouselSlides.children.length}`
           this.lazyLoader(theModal.querySelector('.modal-img'))
+          theModal.querySelector('.modal-img > img').setAttribute('style','width: 100%;height:100%;fit-content:contain;')
           this.showCaption(theModal.querySelector('.modal-img > img'))
         })
         theModal.querySelector('.modal-next').addEventListener('click', () => { 
@@ -313,6 +315,7 @@ export default {
           theModal.querySelector('.modal-img').append(this.carouselSlides.children[this.popIndex].cloneNode(true))
           theModal.querySelector('.modal-count').innerHTML = `${this.popIndex+1} / ${this.carouselSlides.children.length}`
           this.lazyLoader(theModal.querySelector('.modal-img'))
+          theModal.querySelector('.modal-img > img').setAttribute('style','width: 100%;height:100%;fit-content:contain;')
           this.showCaption(theModal.querySelector('.modal-img > img'))
         })
       }
