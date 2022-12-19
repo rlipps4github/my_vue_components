@@ -171,9 +171,9 @@
         </div>
 
         <div class="center-all">
-          <carousel-wc maxw="80rem" minh="65rem" infinite="true" slide-view-columns="1,2,3" slides-wrap="#html-slides">
+          <carousel-wc maxw="80rem" minh="65rem" infinite="true" slide-view-columns="1,2,3" slides-wrap="#html-slides" carousel-popup="true">
             <span slot="slides">
-              <hello-world></hello-world>
+              <hello-world data-pop="https://my.matterport.com/show/?m=kNZhyafGRzB&brand=0"></hello-world>
               <image-wc src="https://picsum.photos/605/400" alt="carousel image"></image-wc>
               <hello-world></hello-world>
               <image-wc src="https://picsum.photos/610/400" alt="carousel image"></image-wc>

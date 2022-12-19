@@ -195,15 +195,29 @@ export default {
     dblClick(e) {
       let theSrc = e.target.hasAttribute('src') ? e.target.getAttribute('src') : null
           theSrc = theSrc == null && e.target.hasAttribute('data-src') ? e.target.getAttribute('data-src') : theSrc
+      let thePopSrc = e.target.hasAttribute('data-pop') ? e.target.getAttribute('data-pop') : null
+          thePopSrc = thePopSrc == null && e.target.closest('.slide').children[0].hasAttribute('data-pop') ? e.target.closest('.slide').children[0].getAttribute('data-pop') : thePopSrc
       for (var x=0;x<this.carouselSlides.children.length;x++) {
         let idxSrc = this.carouselSlides.children[x].hasAttribute('data-src') ? this.carouselSlides.children[x].getAttribute('data-src') : null
             idxSrc = idxSrc == null && this.carouselSlides.children[x].hasAttribute('src') ? this.carouselSlides.children[x].getAttribute('src') : idxSrc
-        if (theSrc && idxSrc) if (theSrc === idxSrc) {
-          this.popIndex = x
-          if (this.displayWidth > this.bp_sm) return this.buildPopup(x)
-          else {
-            if (e.target.hasAttribute('data-pop')) return window.open( e.target.getAttribute('data-pop') )
-            else return window.open( theSrc )
+        let theIdxPopSrc = this.carouselSlides.children[x].hasAttribute('data-pop') ? this.carouselSlides.children[x].getAttribute('data-pop') : null
+        if (theSrc && idxSrc) {
+          if (theSrc === idxSrc) {
+            this.popIndex = x
+            if (this.displayWidth > this.bp_sm) return this.buildPopup(x)
+            else {
+              if (e.target.hasAttribute('data-pop')) return window.open( e.target.getAttribute('data-pop') )
+              else return window.open( theSrc )
+            }
+          }
+        } else {
+          if (thePopSrc == theIdxPopSrc) {
+            this.popIndex = x
+            if (this.displayWidth > this.bp_sm) return this.buildPopup(x)
+            else {
+              if (e.target.hasAttribute('data-pop')) return window.open( e.target.getAttribute('data-pop') )
+              else return window.open( theSrc )
+            }
           }
         }
       }
