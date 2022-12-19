@@ -201,7 +201,10 @@ export default {
         if (theSrc && idxSrc) if (theSrc === idxSrc) {
           this.popIndex = x
           if (this.displayWidth > this.bp_sm) return this.buildPopup(x)
-          else return window.open( theSrc )
+          else {
+            if (e.target.hasAttribute('data-pop')) return window.open( e.target.getAttribute('data-pop') )
+            else return window.open( theSrc )
+          }
         }
       }
     },
@@ -222,6 +225,22 @@ export default {
       e.preventDefault()
       if (e.which === 1 || e.button === 1) if (this.arrowsWrap == '') this.onClick()
       if (e.which === 3 || e.button === 2) if (this.carouselPopup == 'true') this.dblClick(e)
+    },
+    modalClickHandler(idx) {
+      let theModal = document.querySelector('.carousel-modal')
+      theModal.querySelector('.modal-img').innerHTML = '' 
+      if (this.carouselSlides.children[idx].hasAttribute('data-pop')) {
+        let thePopSrc = this.carouselSlides.children[idx].getAttribute('data-pop')
+        if (thePopSrc.indexOf('.jpg') == -1 && thePopSrc.indexOf('.png') == -1 && thePopSrc.indexOf('.gif') == -1 && thePopSrc.indexOf('.webp')) theModal.querySelector('.modal-img').append(this.buildVideoPop(thePopSrc))
+        else theModal.querySelector('.modal-img').innerHTML = `<img src="${this.carouselSlides.children[idx].getAttribute('data-pop')}" />`
+      }
+      else theModal.querySelector('.modal-img').append(this.carouselSlides.children[idx].cloneNode(true))
+      theModal.querySelector('.modal-count').innerHTML = `${idx+1} / ${this.carouselSlides.children.length}`
+      this.lazyLoader(theModal.querySelector('.modal-img'))
+      if (theModal.querySelector('.modal-img > img')) {
+        theModal.querySelector('.modal-img > img').setAttribute('style','max-width: 100%;max-height:100%;object-fit:contain;')
+        this.showCaption(theModal.querySelector('.modal-img > img'))
+      }
     },
     setCarouselElements() {
       if (this.carouselWrap == null) this.carouselWrap = this.$el.querySelector('.carousel-wrap')
@@ -287,38 +306,59 @@ export default {
           <div class="modal-count" style="width:100px;height:40px;border-radius:20px;position:absolute;top:20px;left:calc(50% - 50px);background:rgba(255,255,255,0.3);color:white;font-size:20px;display:flex;justify-content:center;align-items:center;"></div>
           <div class="modal-close" style="width:40px;height:40px;border-radius:50%;position:absolute;top:20px;right:20px;background:rgba(255,255,255,0.3);color:white;font-size:20px;display:flex;justify-content:center;align-items:center;">&times;</div>
           <div class="modal-prev" style="width:40px;height:30px;border-radius:50%;position:absolute;top:calc(50% - 20px);left:20px;background:rgba(255,255,255,0.3);color:white;font-size:20px;display:flex;justify-content:center;align-items:center;transform:scaleY(133%);">&lt;</div>
-          <div class="modal-img" style="max-width:calc(100% - 100px);max-height:calc(100% - 100px);margin:auto;"></div>  
+          <div class="modal-img" style="width:100%;max-width:calc(100vw - 150px);height:100%;max-height:calc(100vh - 150px);margin:auto;display:flex;flex-direction:column;justify-content:center;align-items:center;"></div>  
           <div class="modal-next" style="width:40px;height:30px;border-radius:50%;position:absolute;top:calc(50% - 20px);right:20px;background:rgba(255,255,255,0.3);color:white;font-size:20px;display:flex;justify-content:center;align-items:center;transform:scaleY(133%);">&gt;</div>
       `
       if (document.querySelectorAll('.carousel-modal').length === 0) {
         document.body.append(popModal)
         let theModal = document.querySelector('.carousel-modal')
         theModal.innerHTML = popTemplate
-        theModal.querySelector('.modal-img').append(this.carouselSlides.children[idx].cloneNode(true))
-        theModal.querySelector('.modal-count').innerHTML = `${idx+1} / ${this.carouselSlides.children.length}`
-        this.lazyLoader(theModal.querySelector('.modal-img'))
-        theModal.querySelector('.modal-img > img').setAttribute('style','width: 100%;height:100%;fit-content:contain;')
-        this.showCaption(theModal.querySelector('.modal-img > img'))
+        this.modalClickHandler(idx)
         theModal.querySelector('.modal-close').addEventListener('click', () => { document.querySelector('.carousel-modal').remove() })
         theModal.querySelector('.modal-prev').addEventListener('click', () => { 
-          theModal.querySelector('.modal-img').innerHTML = '' 
           this.popIndex = this.popIndex-1 < 0 ? this.carouselSlides.children.length-1 : this.popIndex-1
-          theModal.querySelector('.modal-img').append(this.carouselSlides.children[this.popIndex].cloneNode(true))
-          theModal.querySelector('.modal-count').innerHTML = `${this.popIndex+1} / ${this.carouselSlides.children.length}`
-          this.lazyLoader(theModal.querySelector('.modal-img'))
-          theModal.querySelector('.modal-img > img').setAttribute('style','width: 100%;height:100%;fit-content:contain;')
-          this.showCaption(theModal.querySelector('.modal-img > img'))
+          this.modalClickHandler(this.popIndex)
         })
         theModal.querySelector('.modal-next').addEventListener('click', () => { 
-          theModal.querySelector('.modal-img').innerHTML = '' 
           this.popIndex = this.popIndex+1 == this.carouselSlides.children.length ? 0 : this.popIndex+1
-          theModal.querySelector('.modal-img').append(this.carouselSlides.children[this.popIndex].cloneNode(true))
-          theModal.querySelector('.modal-count').innerHTML = `${this.popIndex+1} / ${this.carouselSlides.children.length}`
-          this.lazyLoader(theModal.querySelector('.modal-img'))
-          theModal.querySelector('.modal-img > img').setAttribute('style','width: 100%;height:100%;fit-content:contain;')
-          this.showCaption(theModal.querySelector('.modal-img > img'))
+          this.modalClickHandler(this.popIndex)
         })
       }
+    },
+    buildVideoPop(src) {
+      var provider, vid_id, vid_src
+      switch(true) { 
+        case src.indexOf('youtube') > 0: 
+          provider = 'youtube'
+          vid_id = src.split('v=')[1]
+          vid_src = `//www.youtube.com/embed/${vid_id}?version=3&enablejsapi=1&playlist=${vid_id}&loop=1&mute=1&autoplay=1`
+          break
+        case src.indexOf('vimeo') > 0: 
+          provider = 'vimeo'
+          vid_id = src.split('vimeo.com/')[1]
+          vid_src = `//player.vimeo.com/video/${vid_id}?autoplay=1&loop=1&muted=1&background=1&title=0&byline=0&portrait=0&sidedock=0`
+          break
+        case src.indexOf('.mpg') > 0 || src.indexOf('.mp4') > 0 || src.indexOf('.webm') > 0 || src.indexOf('.mov') > 0:
+          provider = 'html5'
+          vid_src = src
+          break
+        default:
+          provider = 'unk'
+          vid_src = src
+        }
+      let vid_el = provider == 'html5' ? document.createElement('video') : document.createElement('iframe')
+      if (provider == 'html5') {
+        let src_el = document.createElement('source')
+        let attribs = { 'class': this.fit, 'preload': true, 'autoplay': true, 'loop': true,  'defaultMuted': true, 'playsinline': true, 'muted': true }
+        for(var key in attribs) { vid_el.setAttribute(key, attribs[key]); }
+        src_el.src = vid_src
+        vid_el.appendChild(src_el)
+      } else { 
+        vid_el.src = vid_src 
+        vid_el.title = this.title
+        vid_el.style = 'width: 100%; height: 100%; max-width: 80vw; max-height: 80vh; border: none;'
+      }
+      return vid_el
     },
     getBreakPointValues() {
       // set user input property values by breakpoint
