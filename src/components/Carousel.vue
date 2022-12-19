@@ -1,5 +1,5 @@
 <template>
-  <div data-id="carousel" :data-row="sRows" :data-col="sColumns" :data-count="slideCount" :show-arrows="arrowsWrap=='' ? 'true' : 'false'" :data-modal="carouselPopup">
+  <div data-id="carousel" :style="wrap_styles" :data-row="sRows" :data-col="sColumns" :data-count="slideCount" :show-arrows="arrowsWrap=='' ? 'true' : 'false'" :data-modal="carouselPopup">
     <div class="carousel-wrap" :style="wrap_styles" @mouseup="clickHandler" @mousemove="watchMouse">
       <slot name="slides"></slot>
     </div>
@@ -602,7 +602,7 @@ export default {
         opacity: 1;
       }
 
-      > img, > div {
+      > * {
         width: 100%;
         height: 100%;
         border-radius: 0;
