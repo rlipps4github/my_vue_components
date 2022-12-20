@@ -76,7 +76,7 @@
         <h1>3 - Video Widget</h1>
         <div class="side-by-side">
           <hello-world></hello-world>
-          <video-wc maxw="20rem,,50rem" src="https://www.youtube.com/watch?v=C0DPdy98e4c"></video-wc>
+          <video-wc fit="contain" maxw="20rem,,50rem" src="https://www.youtube.com/watch?v=C0DPdy98e4c"></video-wc>
         </div>
       </div>
   
