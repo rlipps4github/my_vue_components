@@ -109,10 +109,10 @@ export default {
       // since youtube and vimeo load iframes, we calculate the aspect and supply minimal dimensions to the wrapper
       if (type == 'youtube' || type == 'vimeo') {
         this.aspect = data.height/data.width
-        let aspW = data.width > 500 ? data.width/2 : data.width
-        let aspH = data.width > 500 ? data.height/2 : data.height
-        this.$el.style.minWidth = this.$el.style.minWidth == '' ? aspW+'px' : this.$el.style.minWidth
-        this.$el.style.minHeight = this.$el.style.minHeight == '' ? aspH+'px' : this.$el.style.minHeight
+        // let aspW = data.width > 500 ? data.width/2 : data.width
+        // let aspH = data.width > 500 ? data.height/2 : data.height
+        // this.$el.style.minWidth = this.$el.style.minWidth == '' ? aspW+'px' : this.$el.style.minWidth
+        // this.$el.style.minHeight = this.$el.style.minHeight == '' ? aspH+'px' : this.$el.style.minHeight
       }
     },
     getContainerAspect() {
