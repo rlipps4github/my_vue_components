@@ -113,6 +113,7 @@ export default {
         // let aspH = data.width > 500 ? data.height/2 : data.height
         // this.$el.style.minWidth = this.$el.style.minWidth == '' ? aspW+'px' : this.$el.style.minWidth
         // this.$el.style.minHeight = this.$el.style.minHeight == '' ? aspH+'px' : this.$el.style.minHeight
+        if (this.fit === 'contain') this.$el.style.minHeight = this.$el.style.minHeight == ''
       }
     },
     getContainerAspect() {
@@ -122,7 +123,10 @@ export default {
     getVideoSize() {
       // use the video and wrapper aspect to correctly size the iframe for "contain" or "cover"
       if (this.aspect) {
-        if (this.fit == 'contain') this.$el.querySelector('iframe').style.height = (this.$el.offsetWidth * this.aspect) +'px'
+        if (this.fit == 'contain') {
+          this.$el.style.minHeight = (this.$el.offsetWidth * this.aspect) +'px'
+          this.$el.querySelector('iframe').style.height = (this.$el.offsetWidth * this.aspect) +'px'
+        }
         if (this.fit == 'cover' && this.containerAspect >= this.aspect) 
           if (this.containerAspect >= this.aspect) { 
             this.$el.querySelector('iframe').style.height = '100%'

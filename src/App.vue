@@ -65,7 +65,7 @@
         <h1>2 - Video Widget</h1>
         <div class="side-by-side reverse">
           <hello-world></hello-world>
-          <video-wc fit="contain" maxw="32rem,,50rem" src="https://www.vimeo.com/194553881"></video-wc>
+          <video-wc fit="contain" src="https://www.vimeo.com/194553881"></video-wc>
         </div>
         <div id="location1" style="width: 100%; height: 25vh; background: lightskyblue; display: flex; justify-content: center; align-items: center;">
           <h1>Internal Location</h1>
@@ -76,7 +76,7 @@
         <h1>3 - Video Widget</h1>
         <div class="side-by-side">
           <hello-world></hello-world>
-          <video-wc fit="contain" maxw="20rem,,50rem" src="https://www.youtube.com/watch?v=C0DPdy98e4c"></video-wc>
+          <video-wc fit="contain" src="https://www.youtube.com/watch?v=C0DPdy98e4c"></video-wc>
         </div>
       </div>
   
