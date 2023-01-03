@@ -251,6 +251,8 @@ body {
 
 .center-all {
   width: 100%;
+  height: 90vh;
+  min-height: 40rem;
   display: grid;
   align-items: center;
   justify-content: center;
