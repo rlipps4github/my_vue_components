@@ -197,7 +197,7 @@ export default {
       let theSrc = e.target.hasAttribute('src') ? e.target.getAttribute('src') : null
           theSrc = theSrc == null && e.target.hasAttribute('data-src') ? e.target.getAttribute('data-src') : theSrc
       let thePopSrc = e.target.hasAttribute('data-pop') ? e.target.getAttribute('data-pop') : null
-          thePopSrc = thePopSrc == null && e.target.closest('[data-pop]') ? e.target.closest('[data-pop]') : thePopSrc
+          thePopSrc = thePopSrc == null && e.target.closest('[data-pop]') ? e.target.closest('[data-pop]').getAttribute('data-pop') : thePopSrc
       for (var x=0;x<this.carouselSlides.children.length;x++) {
         let idxSrc = this.carouselSlides.children[x].hasAttribute('data-src') ? this.carouselSlides.children[x].getAttribute('data-src') : null
             idxSrc = idxSrc == null && this.carouselSlides.children[x].hasAttribute('src') ? this.carouselSlides.children[x].getAttribute('src') : idxSrc
