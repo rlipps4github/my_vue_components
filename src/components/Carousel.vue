@@ -293,8 +293,9 @@ export default {
           }
           for (let a=0; a<this.sColumns*this.sRows; a++) {
             let blank = document.createElement('div')
-            if (slideSet.children[0]) theSlide.appendChild(slideSet.children[0])
-            else theSlide.appendChild(blank)
+            // if (slideSet.children[0]) theSlide.appendChild(slideSet.children[0]) else
+            if (slideSet.children[0]) blank.appendChild(slideSet.children[0])
+            theSlide.appendChild(blank)
           }
           this.lazyLoader(theSlide)
           theSlide.setAttribute('style', `grid-gap: ${this.slideViewGap};`)
@@ -656,7 +657,24 @@ export default {
         opacity: 1;
       }
 
-      > * {
+      > div {
+        width: 100%;
+        height: 100%;
+        opacity: 1;
+        transition: 0.3s;
+        overflow: hidden;
+
+        > img:only-child {
+          width: 100%;
+          height: 100%;
+          border-radius: 0;
+          object-fit: cover !important;
+          opacity: 1;
+          transition: 0.3s;
+        }
+      }
+
+      > img {
         width: 100%;
         height: 100%;
         border-radius: 0;
