@@ -31,7 +31,8 @@ export default {
       alignment: '',
       sColumns: '',
       sRows: '',
-      timeout: null,
+      timeout: 0,
+      advanceTimeout: 0,
       loadObserver: null,
       mouseStalker: null,
       mouse_styles: '',
@@ -464,11 +465,12 @@ export default {
       } else { this.bindDots(true) }
     },
     autoPlay() {
+      clearTimeout(this.advanceTimeout)
       if (!this.$el.matches(':hover')) {  
         this.move = 'next'
         this.onClick()
       }
-      setTimeout(this.autoPlay, `${parseInt(this.autoAdvance)*1000}`)
+      this.advanceTimeout = setTimeout(this.autoPlay, `${parseInt(this.autoAdvance)*1000}`)
     }
   },
 
