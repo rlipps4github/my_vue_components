@@ -46,8 +46,8 @@ export default {
       currLeft: 0,
       currIndex: 0,
       popIndex: 0,
-      imgTypes: ['.jpg','.jpeg','.gif','.png','.webp'],
-      vidTypes: ['.mpg','.mp4','.mov','.webm'],
+      imgTypes: ['jpg','jpeg','gif','png','webp'],
+      vidTypes: ['mpg','mp4','mov','webm'],
       scrollTimeout: 0,
       scrolling: false
     }
@@ -232,8 +232,9 @@ export default {
       theModal.querySelector('.modal-img').innerHTML = '' 
       if (this.carouselSlides.children[idx].hasAttribute('data-pop')) {
         let thePopSrc = this.carouselSlides.children[idx].getAttribute('data-pop')
-        if (this.vidTypes.indexOf(thePopSrc.split('.')[thePopSrc.split('.').length - 1]) == -1) theModal.querySelector('.modal-img').append(this.buildVideoPop(thePopSrc))
-        if (this.imgTypes.indexOf(thePopSrc.split('.')[thePopSrc.split('.').length - 1]) > -1) theModal.querySelector('.modal-img').innerHTML = `<img src="${this.carouselSlides.children[idx].getAttribute('data-pop')}" />`
+        let thePopSrcCleaned = thePopSrc.split('?')[0]
+        if (this.vidTypes.indexOf(thePopSrcCleaned.split('.')[thePopSrcCleaned.split('.').length - 1]) == -1) theModal.querySelector('.modal-img').append(this.buildVideoPop(thePopSrc))
+        if (this.imgTypes.indexOf(thePopSrcCleaned.split('.')[thePopSrcCleaned.split('.').length - 1]) > -1) theModal.querySelector('.modal-img').innerHTML = `<img src="${this.carouselSlides.children[idx].getAttribute('data-pop')}" />`
       }
       else theModal.querySelector('.modal-img').append(this.carouselSlides.children[idx].cloneNode(true))
       theModal.querySelector('.modal-count').innerHTML = `${idx+1} / ${this.carouselSlides.children.length}`
