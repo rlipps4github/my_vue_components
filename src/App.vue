@@ -251,9 +251,8 @@ body {
 
 .center-all {
   width: 100%;
-  height: 90vh;
   min-height: 40rem;
-  display: grid;
+  display: flex;
   align-items: center;
   justify-content: center;
 }
@@ -263,7 +262,7 @@ body {
   height: 8rem;
   position: fixed;
   top: 0;
-  background-color: rgba(255,255,255,0.9);
+  background-color: rgba(255,255,255,0.8);
   display: grid;
   grid-template-columns: 1fr 3fr;
   z-index: 200;
@@ -297,7 +296,6 @@ body {
 .center,
 .block-area {
   width: 100%; 
-  min-height: 25vh; 
   position: relative;
   display: flex; 
   flex-direction: column; 

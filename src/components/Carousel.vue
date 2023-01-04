@@ -45,7 +45,8 @@ export default {
       currLeft: 0,
       currIndex: 0,
       popIndex: 0,
-      imgTypes: ['jpg','jpeg',],
+      imgTypes: ['.jpg','.jpeg','.gif','.png','.webp'],
+      vidTypes: ['.mpg','.mp4','.mov','.webm'],
       scrollTimeout: 0,
       scrolling: false
     }
@@ -193,34 +194,18 @@ export default {
         }
       }
     },
-    dblClick(e) {
-      let theSrc = e.target.hasAttribute('src') ? e.target.getAttribute('src') : null
-          theSrc = theSrc == null && e.target.hasAttribute('data-src') ? e.target.getAttribute('data-src') : theSrc
-      let thePopSrc = e.target.hasAttribute('data-pop') ? e.target.getAttribute('data-pop') : null
-          thePopSrc = thePopSrc == null && e.target.closest('[data-pop]') ? e.target.closest('[data-pop]').getAttribute('data-pop') : thePopSrc
-      for (var x=0;x<this.carouselSlides.children.length;x++) {
-        let idxSrc = this.carouselSlides.children[x].hasAttribute('data-src') ? this.carouselSlides.children[x].getAttribute('data-src') : null
-            idxSrc = idxSrc == null && this.carouselSlides.children[x].hasAttribute('src') ? this.carouselSlides.children[x].getAttribute('src') : idxSrc
-        let theIdxPopSrc = this.carouselSlides.children[x].hasAttribute('data-pop') ? this.carouselSlides.children[x].getAttribute('data-pop') : null
-        if (theSrc && idxSrc) {
-          if (theSrc === idxSrc) {
-            this.popIndex = x
-            if (this.displayWidth > this.bp_sm) return this.buildPopup(x)
-            else {
-              if (e.target.hasAttribute('data-pop')) return window.open( e.target.getAttribute('data-pop') )
-              else return window.open( theSrc )
-            }
-          }
-        } else {
-          if (thePopSrc == theIdxPopSrc) {
-            this.popIndex = x
-            if (this.displayWidth > this.bp_sm) return this.buildPopup(x)
-            else {
-              if (e.target.hasAttribute('data-pop')) return window.open( e.target.getAttribute('data-pop') )
-              else return window.open( theSrc )
-            }
-          }
-        }
+    dblClick(e) { // get the index of what was clicked
+      let theFactor = parseInt(this.sColumns) * parseInt(this.sRows)
+      let theSlideIndex = parseInt( e.target.closest('[sld-idx]').getAttribute('sld-idx') ) * theFactor
+      let theItemIndex = parseInt( e.target.closest('[itm-idx]').getAttribute('itm-idx') )
+      this.popIndex = theSlideIndex + theItemIndex
+
+      if (this.displayWidth > this.bp_sm) return this.buildPopup(this.popIndex)
+      else {
+        let theSrc = this.carouselSlides.children[this.popIndex].getAttribute('src').indexOf('https:') > -1 ? this.carouselSlides.children[this.popIndex].getAttribute('src') : null
+            theSrc = theSrc == null && this.carouselSlides.children[this.popIndex].getAttribute('data-src') ? this.carouselSlides.children[this.popIndex].getAttribute('data-src') : theSrc
+            theSrc = theSrc == null && this.carouselSlides.children[this.popIndex].getAttribute('data-pop') ? this.carouselSlides.children[this.popIndex].getAttribute('data-pop') : theSrc
+        if (theSrc) window.open( theSrc )
       }
     },
     goTo(idx) {
@@ -246,8 +231,8 @@ export default {
       theModal.querySelector('.modal-img').innerHTML = '' 
       if (this.carouselSlides.children[idx].hasAttribute('data-pop')) {
         let thePopSrc = this.carouselSlides.children[idx].getAttribute('data-pop')
-        if (thePopSrc.indexOf('.jpg') == -1 && thePopSrc.indexOf('.png') == -1 && thePopSrc.indexOf('.gif') == -1 && thePopSrc.indexOf('.webp')) theModal.querySelector('.modal-img').append(this.buildVideoPop(thePopSrc))
-        else theModal.querySelector('.modal-img').innerHTML = `<img src="${this.carouselSlides.children[idx].getAttribute('data-pop')}" />`
+        if (this.vidTypes.indexOf(thePopSrc.split('.')[thePopSrc.split('.').length - 1]) == -1) theModal.querySelector('.modal-img').append(this.buildVideoPop(thePopSrc))
+        if (this.imgTypes.indexOf(thePopSrc.split('.')[thePopSrc.split('.').length - 1]) > -1) theModal.querySelector('.modal-img').innerHTML = `<img src="${this.carouselSlides.children[idx].getAttribute('data-pop')}" />`
       }
       else theModal.querySelector('.modal-img').append(this.carouselSlides.children[idx].cloneNode(true))
       theModal.querySelector('.modal-count').innerHTML = `${idx+1} / ${this.carouselSlides.children.length}`
@@ -294,12 +279,13 @@ export default {
           }
           for (let a=0; a<this.sColumns*this.sRows; a++) {
             let blank = document.createElement('div')
-            // if (slideSet.children[0]) theSlide.appendChild(slideSet.children[0]) else
+            blank.setAttribute('itm-idx',a)
             if (slideSet.children[0]) blank.appendChild(slideSet.children[0])
             theSlide.appendChild(blank)
           }
           this.lazyLoader(theSlide)
           theSlide.setAttribute('style', `grid-gap: ${this.slideViewGap};`)
+          theSlide.setAttribute('sld-idx', this.slideCount)
           this.carouselWrap.appendChild(theSlide)
           this.slideCount = this.slideCount + 1
           isActive++ 
