@@ -152,7 +152,7 @@
               <image-wc src="https://picsum.photos/600/407" alt="carousel image"></image-wc>
               <image-wc src="https://picsum.photos/609/400" alt="carousel image"></image-wc>
               <image-wc src="https://picsum.photos/600/406" alt="carousel image"></image-wc>
-              <image-wc src="https://picsum.photos/609/402" alt="carousel image"></image-wc>
+              <!-- <image-wc src="https://picsum.photos/609/402" alt="carousel image"></image-wc> -->
             </span>
           </carousel-wc>
         </div>

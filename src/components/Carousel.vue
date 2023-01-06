@@ -200,13 +200,14 @@ export default {
       let theSlideIndex = parseInt( e.target.closest('[sld-idx]').getAttribute('sld-idx') ) * theFactor
       let theItemIndex = parseInt( e.target.closest('[itm-idx]').getAttribute('itm-idx') )
       this.popIndex = theSlideIndex + theItemIndex
-
-      if (this.displayWidth > this.bp_sm) return this.buildPopup(this.popIndex)
-      else {
-        let theSrc = this.carouselSlides.children[this.popIndex].getAttribute('src').indexOf('https:') > -1 ? this.carouselSlides.children[this.popIndex].getAttribute('src') : null
-            theSrc = theSrc == null && this.carouselSlides.children[this.popIndex].getAttribute('data-src') ? this.carouselSlides.children[this.popIndex].getAttribute('data-src') : theSrc
-            theSrc = theSrc == null && this.carouselSlides.children[this.popIndex].getAttribute('data-pop') ? this.carouselSlides.children[this.popIndex].getAttribute('data-pop') : theSrc
-        if (theSrc) window.open( theSrc )
+      if (this.carouselSlides.children[this.popIndex]) {
+        if (this.displayWidth > this.bp_sm) return this.buildPopup(this.popIndex)
+        else {
+          let theSrc = this.carouselSlides.children[this.popIndex].getAttribute('src').indexOf('https:') > -1 ? this.carouselSlides.children[this.popIndex].getAttribute('src') : null
+              theSrc = theSrc == null && this.carouselSlides.children[this.popIndex].getAttribute('data-src') ? this.carouselSlides.children[this.popIndex].getAttribute('data-src') : theSrc
+              theSrc = theSrc == null && this.carouselSlides.children[this.popIndex].getAttribute('data-pop') ? this.carouselSlides.children[this.popIndex].getAttribute('data-pop') : theSrc
+          if (theSrc) window.open( theSrc )
+        }
       }
     },
     goTo(idx) {
