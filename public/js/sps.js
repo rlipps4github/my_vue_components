@@ -94,7 +94,7 @@ const SPS_CONSTRUCTOR = (function (config) {
       cfg.current_page = cfg.ignore_list.indexOf(page_id) < 0 ? page_id : '';
       if (cfg.current_page !== old_page) {
         methods.updateNav(page_id)
-        let newPath = cfg.current_page_path +'/'+ cfg.current_page.replace('#','') + cfg.current_page_query
+        let newPath = '/'+ cfg.current_page.replace('#','') + cfg.current_page_query
         if (window.history && window.history.pushState) history.replaceState({ page: cfg.current_page}, '', newPath);
       }
     },
