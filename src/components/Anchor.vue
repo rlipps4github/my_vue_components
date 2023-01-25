@@ -28,7 +28,7 @@ export default {
     lbl: { default: '', type: String },
     sps: { default: 'false', type: String },
     page_class: { default: 'block-area', type: String },
-    page_depth: { default: '2', type: String }
+    page_depth: { default: '1', type: String }
   },
 
   methods: {
