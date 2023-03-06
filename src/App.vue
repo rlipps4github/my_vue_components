@@ -116,7 +116,7 @@
         </div> 
 
         <div class="center-all">
-          <carousel-wc maxw="80rem" minh="25rem" maxh="45rem" auto-advance="10" infinite="true">
+          <carousel-wc maxw="80rem" minh="25rem" maxh="45rem" auto-advance="10" infinite="true" transition="fade">
             <span slot="slides">
               <image-wc src="https://picsum.photos/600/390" alt="carousel image"></image-wc>
               <image-wc src="https://picsum.photos/600/410" alt="carousel image"></image-wc>
