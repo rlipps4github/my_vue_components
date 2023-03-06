@@ -62,7 +62,7 @@ export default {
     slideViewRows: { default: '1', type: String },
     slideViewGap: { default: '0', type: String },
     align: { default: 'left', type: String },
-    transition: { default: 'fade', type: String },
+    transition: { default: 'slide', type: String },
     arrowsWrap: { default: '', type: String },
     dotsWrap: { default: '', type: String },
     dotsType: { default: '', type: String },
@@ -160,38 +160,43 @@ export default {
     },
     onClick() {
       this.setDims()
+      let scrollBehavior = this.transition == 'fade' ? 'auto' : 'smooth'
       if (this.slideCount > 1) {
         if (this.move == 'next') {
           if (this.currIndex == this.slideCount-1 && this.infinite == 'true') { 
-            if (this.$el.querySelector('.clone-next').childNodes.length == 0)
-              this.$el.querySelector('.clone-next').appendChild(this.$el.querySelectorAll('.carousel-wrap .slide')[0].cloneNode(true))
-              this.lazyLoader(this.$el.querySelector('.clone-next').querySelector('.slide'))
-            this.carouselWrap.classList.add('over-next')
-            this.$el.querySelector('.clone-next').classList.add('over-next')
-            this.$el.querySelector('.clone-next').setAttribute('style', `grid-gap: ${this.slideViewGap};`)
-            setTimeout(() => { 
-              this.carouselWrap.classList.remove('over-next')
-              this.$el.querySelector('.clone-next').classList.remove('over-next')
-              window.requestAnimationFrame(() => { this.carouselWrap.scrollTo({ left: 0, behavior: 'auto' }) })
-            }, 250)
+            if (this.transition !== 'fade') {
+              if (this.$el.querySelector('.clone-next').childNodes.length == 0)
+                this.$el.querySelector('.clone-next').appendChild(this.$el.querySelectorAll('.carousel-wrap .slide')[0].cloneNode(true))
+                this.lazyLoader(this.$el.querySelector('.clone-next').querySelector('.slide'))
+              this.carouselWrap.classList.add('over-next')
+              this.$el.querySelector('.clone-next').classList.add('over-next')
+              this.$el.querySelector('.clone-next').setAttribute('style', `grid-gap: ${this.slideViewGap};`)
+              setTimeout(() => { 
+                this.carouselWrap.classList.remove('over-next')
+                this.$el.querySelector('.clone-next').classList.remove('over-next')
+                window.requestAnimationFrame(() => { this.carouselWrap.scrollTo({ left: 0, behavior: 'auto' }) })
+              }, 250)
+            } else window.requestAnimationFrame(() => { this.carouselWrap.scrollTo({ left: 0, behavior: 'auto' }) })
           }
-          else window.requestAnimationFrame(() => { this.carouselWrap.scrollTo({ left: this.currLeft+this.currWidth, behavior: 'smooth' }) })
+          else window.requestAnimationFrame(() => { this.carouselWrap.scrollTo({ left: this.currLeft+this.currWidth, behavior: scrollBehavior }) })
         }
         if (this.move == 'prev') {
           if (this.currIndex == 0 && this.infinite == 'true') {
-            if (this.$el.querySelector('.clone-prev').childNodes.length == 0) 
-              this.$el.querySelector('.clone-prev').appendChild(this.$el.querySelectorAll('.carousel-wrap .slide')[this.slideCount-1].cloneNode(true))
-              this.lazyLoader(this.$el.querySelector('.clone-prev').querySelector('.slide')) 
-            this.carouselWrap.classList.add('over-prev')
-            this.$el.querySelector('.clone-prev').classList.add('over-prev')
-            this.$el.querySelector('.clone-prev').setAttribute('style', `grid-gap: ${this.slideViewGap};`)
-            setTimeout(() => {
-              this.carouselWrap.classList.remove('over-prev')
-              this.$el.querySelector('.clone-prev').classList.remove('over-prev')
-              window.requestAnimationFrame(() => {  this.carouselWrap.scrollTo({ left: this.scrollWidth-this.currWidth, behavior: 'auto' }) })
-            }, 250)
+            if (this.transition !== 'fade') {
+              if (this.$el.querySelector('.clone-prev').childNodes.length == 0) 
+                this.$el.querySelector('.clone-prev').appendChild(this.$el.querySelectorAll('.carousel-wrap .slide')[this.slideCount-1].cloneNode(true))
+                this.lazyLoader(this.$el.querySelector('.clone-prev').querySelector('.slide')) 
+              this.carouselWrap.classList.add('over-prev')
+              this.$el.querySelector('.clone-prev').classList.add('over-prev')
+              this.$el.querySelector('.clone-prev').setAttribute('style', `grid-gap: ${this.slideViewGap};`)
+              setTimeout(() => {
+                this.carouselWrap.classList.remove('over-prev')
+                this.$el.querySelector('.clone-prev').classList.remove('over-prev')
+                window.requestAnimationFrame(() => {  this.carouselWrap.scrollTo({ left: this.scrollWidth-this.currWidth, behavior: 'auto' }) })
+              }, 250)
+            } else window.requestAnimationFrame(() => {  this.carouselWrap.scrollTo({ left: this.scrollWidth-this.currWidth, behavior: 'auto' }) })
           }
-          else window.requestAnimationFrame(() => {  this.carouselWrap.scrollTo({ left: this.currLeft-this.currWidth, behavior: 'smooth' }) })
+          else window.requestAnimationFrame(() => {  this.carouselWrap.scrollTo({ left: this.currLeft-this.currWidth, behavior: scrollBehavior }) })
         }
       }
     },
@@ -249,6 +254,7 @@ export default {
       if (this.carouselWrap == null) this.carouselWrap = this.$el.querySelector('.carousel-wrap')
       if (this.carouselSlides == null) this.carouselSlides = this.$el.querySelector('.carousel-wrap').children.item(0)
       if (this.mouseStalker == null) this.mouseStalker = this.$el.querySelector('.mouse-stalker')
+      if (this.transition == 'fade') this.carouselWrap.classList.add('fade')
     },
     getIndex() {
       this.setDims()
@@ -624,6 +630,13 @@ export default {
       }
 
       > :not(.slide) { display: none; }
+
+      &.fade .slide {
+        transition: 0.8s;
+        opacity: 0;
+
+        &.active { opacity: 1; }
+      }
     }
 
     .slide {
