@@ -123,13 +123,13 @@
               <image-wc src="https://picsum.photos/605/400" alt="carousel image"></image-wc>
               <image-wc src="https://picsum.photos/600/408" alt="carousel image"></image-wc>
               <image-wc src="https://picsum.photos/610/400" alt="carousel image"></image-wc>
-              <image-wc src="https://picsum.photos/599/390" alt="carousel image"></image-wc>
+              <image-wc src="https://picsum.photos/599/391" alt="carousel image"></image-wc>
               <image-wc src="https://picsum.photos/609/402" alt="carousel image"></image-wc>
-              <image-wc src="https://picsum.photos/600/390" alt="carousel image"></image-wc>
+              <image-wc src="https://picsum.photos/600/394" alt="carousel image"></image-wc>
               <image-wc src="https://picsum.photos/600/411" alt="carousel image"></image-wc>
               <image-wc src="https://picsum.photos/605/402" alt="carousel image"></image-wc>
               <image-wc src="https://picsum.photos/600/408" alt="carousel image"></image-wc>
-              <image-wc src="https://picsum.photos/610/408" alt="carousel image"></image-wc>
+              <image-wc src="https://picsum.photos/610/418" alt="carousel image"></image-wc>
               <image-wc src="https://picsum.photos/599/390" alt="carousel image"></image-wc>
               <image-wc src="https://picsum.photos/609/402" alt="carousel image"></image-wc>
             </span>
@@ -143,15 +143,20 @@
             <span slot="slides">
               <image-wc src="https://picsum.photos/600/390" alt="carousel image" title="sup sup" data-pop="https://www.youtube.com/watch?v=0TPwQZ8r8Q0"></image-wc>
               <image-wc src="https://picsum.photos/600/410" alt="carousel image" title="sup dawg" data-pop="https://picsum.photos/1200/810"></image-wc>
-              <image-wc src="https://picsum.photos/605/400" alt="carousel image"></image-wc>
+              <image-wc src="https://picsum.photos/600/397" alt="carousel image"></image-wc>
+              <image-wc src="https://picsum.photos/600/411" alt="carousel image"></image-wc>
+              <image-wc src="https://picsum.photos/605/401" alt="carousel image"></image-wc>
               <image-wc src="https://picsum.photos/600/408" alt="carousel image"></image-wc>
-              <image-wc src="https://picsum.photos/610/400" alt="carousel image"></image-wc>
-              <image-wc src="https://picsum.photos/599/390" alt="carousel image"></image-wc>
-              <image-wc src="https://picsum.photos/600/409" alt="carousel image" title="yeah that's right"></image-wc>
-              <image-wc src="https://picsum.photos/604/400" alt="carousel image"></image-wc>
-              <image-wc src="https://picsum.photos/600/407" alt="carousel image"></image-wc>
-              <image-wc src="https://picsum.photos/609/400" alt="carousel image"></image-wc>
+              <image-wc src="https://picsum.photos/610/402" alt="carousel image"></image-wc>
+              <image-wc src="https://picsum.photos/599/396" alt="carousel image"></image-wc>
+              <image-wc src="https://picsum.photos/609/403" alt="carousel image"></image-wc>
+              <image-wc src="https://picsum.photos/600/393" alt="carousel image"></image-wc>
+              <image-wc src="https://picsum.photos/600/413" alt="carousel image"></image-wc>
+              <image-wc src="https://picsum.photos/605/404" alt="carousel image"></image-wc>
               <image-wc src="https://picsum.photos/600/406" alt="carousel image"></image-wc>
+              <image-wc src="https://picsum.photos/610/405" alt="carousel image"></image-wc>
+              <image-wc src="https://picsum.photos/599/399" alt="carousel image"></image-wc>
+              <image-wc src="https://picsum.photos/609/407" alt="carousel image"></image-wc>
               <!-- <image-wc src="https://picsum.photos/609/402" alt="carousel image"></image-wc> -->
             </span>
           </carousel-wc>
@@ -171,20 +176,30 @@
         </div>
 
         <div class="center-all">
-          <carousel-wc maxw="80rem" minh="65rem" infinite="true" slide-view-columns="1,2,3" slides-wrap="#html-slides" carousel-popup="true">
+          <carousel-wc minw="30rem,90vw" maxw="30rem,90vw" minh="40rem" card-width="300px,360px" infinite="true" slides-wrap="#html-slides" carousel-popup="true" arrows-wrap="#dope-arrows" align="center">
             <span slot="slides">
-              <hello-world data-pop="https://my.matterport.com/show/?m=kNZhyafGRzB&brand=0"></hello-world>
+              <!-- <hello-world data-pop="https://my.matterport.com/show/?m=kNZhyafGRzB&brand=0"></hello-world> -->
               <image-wc src="https://picsum.photos/605/400" alt="carousel image"></image-wc>
-              <hello-world></hello-world>
+              <!-- <hello-world></hello-world> -->
               <image-wc src="https://picsum.photos/610/400" alt="carousel image"></image-wc>
-              <hello-world></hello-world>
+              <!-- <hello-world></hello-world> -->
               <image-wc src="https://picsum.photos/612/400" alt="carousel image"></image-wc>
             </span>
           </carousel-wc>
           <div id="html-slides"></div>
         </div>
 
-        <div style="width: 100%; height: 15vh; background: lightgreen"></div>
+        <div style="width: 100%; height: 15vh; background: lightgreen">
+          <div id="dope-arrows">
+            &nbsp;
+            <a class="prev"> &lt; </a>
+            &nbsp;
+            <span id="top-dots"></span>
+            &nbsp;
+            <a class="next"> &gt; </a>
+            &nbsp;
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -315,7 +330,8 @@ body {
   }
 }
 
-#top-arrows {
+#top-arrows,
+#dope-arrows {
   font-size: 5rem;
   display: flex;
   justify-content: center;

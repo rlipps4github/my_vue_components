@@ -1,5 +1,5 @@
 <template>
-  <div data-id="carousel" :style="wrap_styles" :data-row="sRows" :data-col="sColumns" :data-count="slideCount" :show-arrows="arrowsWrap=='' ? 'true' : 'false'" :data-modal="carouselPopup">
+  <div data-id="carousel" :style="carousel_styles" :data-row="sRows" :data-col="sColumns" :data-count="slideCount" :show-arrows="arrowsWrap=='' ? 'true' : 'false'" :data-modal="carouselPopup">
     <div class="carousel-wrap" :style="wrap_styles" @mouseup="clickHandler" @mousemove="watchMouse">
       <slot name="slides"></slot>
     </div>
@@ -9,7 +9,6 @@
 </template>
 
 <script>
-
 
 export default {
   name: 'CarouselWc',
@@ -28,6 +27,7 @@ export default {
       minWidth: '0',
       maxHeight: '0',
       minHeight: '0',
+      cardSlideWidth: null,
       alignment: '',
       sColumns: '',
       sRows: '',
@@ -58,6 +58,7 @@ export default {
     minw: { default: '', type: String },
     maxh: { default: '', type: String },
     minh: { default: '', type: String },
+    cardWidth: {default: '', type: String},
     slideViewColumns: { default: '1', type: String },
     slideViewRows: { default: '1', type: String },
     slideViewGap: { default: '0', type: String },
@@ -74,13 +75,16 @@ export default {
 
   computed: {
 
+    carousel_styles() {
+      return `justify-content: ${this.alignment};`
+    },
+
     wrap_styles() {
       let str = ''
       str += this.maxWidth !== '0' ? `max-width: ${this.maxWidth}; ` : ''
       str += this.minWidth !== '0' ? `min-width: ${this.minWidth}; ` : ''
       str += this.maxHeight !== '0' ? `max-height: ${this.maxHeight}; ` : ''
       str += this.minHeight !== '0' ? `min-height: ${this.minHeight};` : ''
-      str += `justify-content: ${this.alignment}`
       return str
     }
 
@@ -121,7 +125,11 @@ export default {
     onResize() {
       // methods ran on resize with debounce
       clearTimeout(this.timeout)
-      this.timeout = setTimeout(() => { this.displayWidth = window.innerWidth })
+      this.timeout = setTimeout(() => { 
+        this.displayWidth = window.innerWidth 
+        if (this.cardWidth != '' && this.slidesWrap != '') setTimeout(() => { this.goTo(0) })
+      })
+      
     },
     onScroll() {
       this.scrolling = true
@@ -160,10 +168,11 @@ export default {
     },
     onClick() {
       this.setDims()
-      let scrollBehavior = this.transition == 'fade' ? 'auto' : 'smooth'
+      let scrollBehavior = this.transition == 'fade' && this.cardWidth == '' ? 'auto' : 'smooth'
+      let scrollDistance = this.cardSlideWidth ? parseInt(this.cardSlideWidth) : this.currWidth
       if (this.slideCount > 1) {
         if (this.move == 'next') {
-          if (this.currIndex == this.slideCount-1 && this.infinite == 'true') { 
+          if (this.currIndex == this.slideCount-1 && this.infinite == 'true' && this.cardWidth == '') { 
             if (this.transition !== 'fade') {
               if (this.$el.querySelector('.clone-next').childNodes.length == 0)
                 this.$el.querySelector('.clone-next').appendChild(this.$el.querySelectorAll('.carousel-wrap .slide')[0].cloneNode(true))
@@ -178,10 +187,14 @@ export default {
               }, 250)
             } else window.requestAnimationFrame(() => { this.carouselWrap.scrollTo({ left: 0, behavior: 'auto' }) })
           }
-          else window.requestAnimationFrame(() => { this.carouselWrap.scrollTo({ left: this.currLeft+this.currWidth, behavior: scrollBehavior }) })
+          else if (this.currIndex == this.slideCount-1 && this.cardWidth != '') {
+            window.requestAnimationFrame(() => { this.carouselWrap.scrollTo({ left: this.currLeft+scrollDistance, behavior: scrollBehavior }) })
+            setTimeout(() => { window.requestAnimationFrame(() => { this.carouselWrap.scrollTo({ left: 0, behavior: 'auto' }) }) }, 500)
+          }
+          else window.requestAnimationFrame(() => { this.carouselWrap.scrollTo({ left: this.currLeft+scrollDistance, behavior: scrollBehavior }) })
         }
         if (this.move == 'prev') {
-          if (this.currIndex == 0 && this.infinite == 'true') {
+          if (this.currIndex == 0 && this.infinite == 'true' && this.cardWidth == '') {
             if (this.transition !== 'fade') {
               if (this.$el.querySelector('.clone-prev').childNodes.length == 0) 
                 this.$el.querySelector('.clone-prev').appendChild(this.$el.querySelectorAll('.carousel-wrap .slide')[this.slideCount-1].cloneNode(true))
@@ -196,7 +209,11 @@ export default {
               }, 250)
             } else window.requestAnimationFrame(() => {  this.carouselWrap.scrollTo({ left: this.scrollWidth-this.currWidth, behavior: 'auto' }) })
           }
-          else window.requestAnimationFrame(() => {  this.carouselWrap.scrollTo({ left: this.currLeft-this.currWidth, behavior: scrollBehavior }) })
+          else if (this.currIndex == 0 && this.cardWidth != '') {
+            window.requestAnimationFrame(() => {  this.carouselWrap.scrollTo({ left: scrollDistance*this.slideCount, behavior: 'instant' }) })
+            setTimeout(() => { window.requestAnimationFrame(() => {  this.carouselWrap.scrollTo({ left: this.currLeft-scrollDistance, behavior: scrollBehavior }) }) }, 100)
+          }
+          else window.requestAnimationFrame(() => {  this.carouselWrap.scrollTo({ left: this.currLeft-scrollDistance, behavior: scrollBehavior }) })
         }
       }
     },
@@ -255,10 +272,14 @@ export default {
       if (this.carouselSlides == null) this.carouselSlides = this.$el.querySelector('.carousel-wrap').children.item(0)
       if (this.mouseStalker == null) this.mouseStalker = this.$el.querySelector('.mouse-stalker')
       if (this.transition == 'fade') this.carouselWrap.classList.add('fade')
+      if (this.cardWidth != '') this.carouselWrap.classList.add('card')
     },
     getIndex() {
+      let scrollDistance = this.cardSlideWidth ? parseInt(this.cardSlideWidth) : this.currWidth
       this.setDims()
-      this.currIndex = Math.round(this.currLeft/this.currWidth) || 0
+      let scrollIndex = Math.round(this.currLeft/scrollDistance) || 0
+      this.currIndex = scrollIndex < this.slideCount ? scrollIndex : this.currIndex
+      if (scrollIndex > this.slideCount) setTimeout(() => {this.carouselWrap.scrollTo({ left: this.currLeft-(this.slideCount*scrollDistance), behavior: 'instant' })}, 100)
     },
     setDims() {
       this.currBounds = this.carouselWrap.getBoundingClientRect()
@@ -293,15 +314,38 @@ export default {
             theSlide.appendChild(blank)
           }
           this.lazyLoader(theSlide)
-          theSlide.setAttribute('style', `grid-gap: ${this.slideViewGap};`)
+          if (this.cardSlideWidth != '') theSlide.setAttribute('style',`max-width:${this.cardSlideWidth};min-width:${this.cardSlideWidth};`)
+          else theSlide.setAttribute('style', `grid-gap: ${this.slideViewGap};`)
           theSlide.setAttribute('sld-idx', this.slideCount)
           this.carouselWrap.appendChild(theSlide)
           this.slideCount = this.slideCount + 1
           isActive++ 
         }
-        if (this.infinite == 'true') {
+        if (this.infinite == 'true' && this.cardWidth == '') {
           this.$el.insertBefore(nextClone, this.carouselWrap)
           this.$el.insertBefore(prevClone, this.carouselWrap.nextSibling)
+        }
+        if (this.cardWidth != '' && this.slideViewColumns == '1' && this.slideViewRows == '1') {
+          let dupSlideSet1 = this.carouselSlides.cloneNode(true)
+          let dupSlideSet2 = this.carouselSlides.cloneNode(true)
+          while (dupSlideSet1.children[0]) {
+            let dupSlide = document.createElement('div')
+            dupSlide.setAttribute('class','slide duped') 
+            dupSlide.setAttribute('style',`max-width:${this.cardSlideWidth};min-width:${this.cardSlideWidth};`)
+            dupSlide.appendChild(dupSlideSet1.children[0])
+            this.lazyLoader(dupSlide)
+            this.carouselWrap.appendChild(dupSlide)
+          }
+          if (this.slideCount < 5) {
+            while (dupSlideSet2.children[0]) {
+              let dupSlide = document.createElement('div')
+              dupSlide.setAttribute('class','slide duped') 
+              dupSlide.setAttribute('style',`max-width:${this.cardSlideWidth};min-width:${this.cardSlideWidth};`)
+              dupSlide.appendChild(dupSlideSet2.children[0])
+              this.lazyLoader(dupSlide)
+              this.carouselWrap.appendChild(dupSlide)
+            }
+          }
         }
       }
       if (this.arrowsWrap != '' && this.arrowsWrap != 'off') this.bindArrows()
@@ -377,6 +421,7 @@ export default {
       let theMinw = this.minw.split(',')
       let theMaxh = this.maxh.split(',')
       let theMinh = this.minh.split(',')
+      let theCardw = this.cardWidth.split(',')
       let theAlign = this.align.split(',') 
       let theCount = this.slideViewColumns.split(',') 
       let theRCount = this.slideViewRows.split(',') 
@@ -384,6 +429,7 @@ export default {
       this.minWidth = theMinw[0]
       this.maxHeight = theMaxh[0]
       this.minHeight = theMinh[0]
+      this.cardSlideWidth = theCardw[0]
       this.alignment = theAlign[0]
       this.sColumns = theCount[0]
       this.sRows = theRCount[0]
@@ -393,6 +439,7 @@ export default {
           for (let i in theMinw) this.minWidth = theMinw[i] != undefined && theMinw[i] != '' && i < 2 ? theMinw[i] : this.minWidth
           for (let i in theMaxh) this.maxHeight = theMaxh[i] != undefined && theMaxh[i] != '' && i < 2 ? theMaxh[i] : this.maxHeight
           for (let i in theMinh) this.minHeight = theMinh[i] != undefined && theMinh[i] != '' && i < 2 ? theMinh[i] : this.minHeight
+          for (let i in theCardw) this.cardSlideWidth = theCardw[i] != undefined && theCardw[i] != '' && i < 2 ? theCardw[i] : this.cardSlideWidth
           for (let i in theAlign) this.alignment = theAlign[i] != undefined && theAlign[i] != '' && i < 2 ? theAlign[i] : this.alignment
           for (let i in theCount) this.sColumns = theCount[i] != undefined && theCount[i] != '' && i < 2 ? theCount[i] : this.sColumns
           for (let i in theRCount) this.sRows = theRCount[i] != undefined && theRCount[i] != '' && i < 2 ? theRCount[i] : this.sRows
@@ -402,6 +449,7 @@ export default {
           for (let i in theMinw) this.minWidth = theMinw[i] != undefined && theMinw[i] != '' && i < 3 ? theMinw[i] : this.minWidth
           for (let i in theMaxh) this.maxHeight = theMaxh[i] != undefined && theMaxh[i] != '' && i < 3 ? theMaxh[i] : this.maxHeight
           for (let i in theMinh) this.minHeight = theMinh[i] != undefined && theMinh[i] != '' && i < 3 ? theMinh[i] : this.minHeight
+          for (let i in theCardw) this.cardSlideWidth = theCardw[i] != undefined && theCardw[i] != '' && i < 3 ? theCardw[i] : this.cardSlideWidth
           for (let i in theAlign) this.alignment = theAlign[i] != undefined && theAlign[i] != '' && i < 3 ? theAlign[i] : this.alignment
           for (let i in theCount) this.sColumns = theCount[i] != undefined && theCount[i] != '' && i < 3 ? theCount[i] : this.sColumns
           for (let i in theRCount) this.sRows = theRCount[i] != undefined && theRCount[i] != '' && i < 3 ? theRCount[i] : this.sRows
@@ -411,6 +459,7 @@ export default {
           for (let i in theMinw) this.minWidth = theMinw[i] != undefined && theMinw[i] != '' && i < 4 ? theMinw[i] : this.minWidth
           for (let i in theMaxh) this.maxHeight = theMaxh[i] != undefined && theMaxh[i] != '' && i < 4 ? theMaxh[i] : this.maxHeight
           for (let i in theMinh) this.minHeight = theMinh[i] != undefined && theMinh[i] != '' && i < 4 ? theMinh[i] : this.minHeight
+          for (let i in theCardw) this.cardSlideWidth = theCardw[i] != undefined && theCardw[i] != '' && i < 4 ? theCardw[i] : this.cardSlideWidth
           for (let i in theAlign) this.alignment = theAlign[i] != undefined && theAlign[i] != '' && i < 4 ? theAlign[i] : this.alignment
           for (let i in theCount) this.sColumns = theCount[i] != undefined && theCount[i] != '' && i < 4 ? theCount[i] : this.sColumns
           for (let i in theRCount) this.sRows = theRCount[i] != undefined && theRCount[i] != '' && i < 4 ? theRCount[i] : this.sRows
@@ -420,6 +469,7 @@ export default {
           for (let i in theMinw) this.minWidth = theMinw[i] != undefined && theMinw[i] != '' ? theMinw[i] : this.minWidth
           for (let i in theMaxh) this.maxHeight = theMaxh[i] != undefined && theMaxh[i] != '' ? theMaxh[i] : this.maxHeight
           for (let i in theMinh) this.minHeight = theMinh[i] != undefined && theMinh[i] != '' ? theMinh[i] : this.minHeight
+          for (let i in theCardw) this.cardSlideWidth = theCardw[i] != undefined && theCardw[i] != '' ? theCardw[i] : this.cardSlideWidth
           for (let i in theAlign) this.alignment = theAlign[i] != undefined && theAlign[i] != '' ? theAlign[i] : this.alignment
           for (let i in theCount) this.sColumns = theCount[i] != undefined && theCount[i] != '' ? theCount[i] : this.sColumns
           for (let i in theRCount) this.sRows = theRCount[i] != undefined && theRCount[i] != '' ? theRCount[i] : this.sRows
@@ -463,6 +513,10 @@ export default {
       if (theStyles) theTarget.appendChild(theStyles)
       theTarget.appendChild(theCarousel)
     },
+    updateSlideAttr() {
+      let theSlides = this.$el.querySelectorAll('.slide')
+      theSlides.forEach((s) => { s.setAttribute('style',`max-width:${this.cardSlideWidth};min-width:${this.cardSlideWidth};`) })
+    },
     updateDots() {
       if (this.dotsType == 'dots' && this.dotsWrap != '' ) {
         this.setDims()
@@ -486,6 +540,7 @@ export default {
     displayWidth() { this.getBreakPointValues() },
     lazyLoaded() { this.buildSlides() },
     sColumns() { this.buildSlides(); this.getIndex() },
+    cardSlideWidth() { this.updateSlideAttr(); },
     mouseX() { 
       this.setDims()
       let thisMid = this.currBounds.left + (this.currWidth/2)
@@ -509,6 +564,7 @@ export default {
     slideCount() { if (this.dotsWrap != '' && this.dotsWrap != 'off') this.bindDots(true) }
   }
 }
+
 </script>
 
 <style lang="scss">
@@ -616,9 +672,14 @@ export default {
       overflow: hidden;
       overflow-x: auto;
       scroll-snap-type: x mandatory;
-      -ms-overflow-style: none;  /* IE and Edge */
+      -ms-overflow-style: none;  /* Edge */
       scrollbar-width: none;  /* Firefox */
       &::-webkit-scrollbar { display: none; } /* Chrome */
+
+      &.card {
+        scroll-snap-type: initial;
+        pointer-events: none;
+      }
 
       &.over-prev { 
         transform: translateX(100%); 
