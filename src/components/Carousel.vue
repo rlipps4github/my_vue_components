@@ -325,29 +325,45 @@ export default {
           this.$el.insertBefore(nextClone, this.carouselWrap)
           this.$el.insertBefore(prevClone, this.carouselWrap.nextSibling)
         }
+        // need some dupes if we are going to be a card carsouel
         if (this.cardWidth != '' && this.slideViewColumns == '1' && this.slideViewRows == '1') {
-          let dupSlideSet1 = this.carouselSlides.cloneNode(true)
-          let dupSlideSet2 = this.carouselSlides.cloneNode(true)
+          let dupSlideSet1 = this.carouselSlides.cloneNode(true), ds1 = 0
+          let dupSlideSet2 = this.carouselSlides.cloneNode(true), ds2 = 0
           while (dupSlideSet1.children[0]) {
             let dupSlide = document.createElement('div')
+            dupSlide.setAttribute('sld-idx', ds1)
             dupSlide.setAttribute('class','slide duped') 
             dupSlide.setAttribute('style',`max-width:${this.cardSlideWidth};min-width:${this.cardSlideWidth};`)
-            dupSlide.appendChild(dupSlideSet1.children[0])
+            for (let a=0; a<this.sColumns*this.sRows; a++) {
+              let blank = document.createElement('div')
+              blank.setAttribute('itm-idx',a)
+              if (dupSlideSet1.children[0]) blank.appendChild(dupSlideSet1.children[0])
+              dupSlide.appendChild(blank)
+            }
             this.lazyLoader(dupSlide)
             this.carouselWrap.appendChild(dupSlide)
+            ds1++
           }
           if (this.slideCount < 5) {
             while (dupSlideSet2.children[0]) {
               let dupSlide = document.createElement('div')
+              dupSlide.setAttribute('sld-idx', ds2)
               dupSlide.setAttribute('class','slide duped') 
               dupSlide.setAttribute('style',`max-width:${this.cardSlideWidth};min-width:${this.cardSlideWidth};`)
-              dupSlide.appendChild(dupSlideSet2.children[0])
+              for (let a=0; a<this.sColumns*this.sRows; a++) {
+                let blank = document.createElement('div')
+                blank.setAttribute('itm-idx',a)
+                if (dupSlideSet2.children[0]) blank.appendChild(dupSlideSet2.children[0])
+                dupSlide.appendChild(blank)
+              }
               this.lazyLoader(dupSlide)
               this.carouselWrap.appendChild(dupSlide)
+              ds2++
             }
           }
         }
       }
+      // external binding
       if (this.arrowsWrap != '' && this.arrowsWrap != 'off') this.bindArrows()
       if (this.dotsWrap != '' && this.dotsWrap != 'off') this.bindDots()
       if (this.slidesWrap != '') this.bindSlides()
@@ -678,7 +694,7 @@ export default {
 
       &.card {
         scroll-snap-type: initial;
-        pointer-events: none;
+        // pointer-events: none;
       }
 
       &.over-prev { 
@@ -693,7 +709,7 @@ export default {
       > :not(.slide) { display: none; }
 
       &.fade .slide {
-        transition: 0.8s;
+        transition: 1.66s;
         opacity: 0;
 
         &.active { opacity: 1; }
