@@ -70,7 +70,8 @@ export default {
     infinite: { default: '', type: String },
     carouselPopup: { default: '', type: String },
     slidesWrap: { default: '', type: String },
-    autoAdvance: { default: '', type: String }
+    autoAdvance: { default: '', type: String },
+    fit: { default: '', type: String }
   },
 
   computed: {
@@ -268,6 +269,7 @@ export default {
       }
     },
     setCarouselElements() {
+      if (this.fit == 'cover') this.$el.classList.add('cover')
       if (this.carouselWrap == null) this.carouselWrap = this.$el.querySelector('.carousel-wrap')
       if (this.carouselSlides == null) this.carouselSlides = this.$el.querySelector('.carousel-wrap').children.item(0)
       if (this.mouseStalker == null) this.mouseStalker = this.$el.querySelector('.mouse-stalker')
@@ -595,6 +597,11 @@ export default {
     height: auto; 
     position: relative;
     overflow: hidden;
+
+    &.cover {
+      width: 100%;
+      height: 100%;
+    }
 
     > .clone {
       width: 100%;
