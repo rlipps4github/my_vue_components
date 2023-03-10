@@ -176,7 +176,7 @@
         </div>
 
         <div class="center-all">
-          <carousel-wc minw="30rem,90vw" maxw="30rem,90vw" minh="40rem" card-width="300px,360px" infinite="true" slides-wrap="#html-slides" carousel-popup="true" arrows-wrap="#dope-arrows" align="center">
+          <carousel-wc card-width="300px,360px" infinite="true" slides-wrap="#html-slides" carousel-popup="true" arrows-wrap="#dope-arrows" align="center" fit="cover">
             <span slot="slides">
               <!-- <hello-world data-pop="https://my.matterport.com/show/?m=kNZhyafGRzB&brand=0"></hello-world> -->
               <image-wc src="https://picsum.photos/605/400" alt="carousel image"></image-wc>
@@ -306,6 +306,11 @@ body {
   width: 40rem;
   max-width: 100%;
   height: 30rem;
+}
+
+#html-slides {
+  width: 100%;
+  height: 40rem;
 }
 
 .center,
