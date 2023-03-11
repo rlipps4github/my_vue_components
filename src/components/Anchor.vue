@@ -1,8 +1,8 @@
 <template>
-  <a :id="aid" :href="url" :title="atitle || lbl" @click="anchorClick" :target="sps=='false' ? '_blank' : ''">
-    <slot name="prefix"></slot>
+  <a :id="aid" :href="url" :title="atitle || lbl" :style="anchor_styles" @click="anchorClick" :target="sps=='false' ? '_blank' : ''">
+    <div :style="slot1_styles"><slot name="prefix"></slot></div>
     {{ lbl }}
-    <slot name="suffix"></slot>
+    <div :style="slot2_styles"><slot name="suffix"></slot></div>
   </a>
 </template>
 
@@ -13,6 +13,13 @@ export default {
   data() {
     return {
       window_top: 0,
+      displayWidth: window.innerWidth,
+      bp_sm: 576,
+      bp_md: 768,
+      bp_lg: 992,
+      bp_xl: 1200,
+      anchor_padding: '',
+      slot_padding: '',
       fixed_head: false,
       header_offset: 0,
       page_target: null,
@@ -23,12 +30,37 @@ export default {
 
   props: {
     url: { default: '', type: String },
+    pad: { default: '', type: String },
+    slot_pad: { default: '', type: String },
     atitle: { default: '', type: String },
     aid: { default: '', type: String },
     lbl: { default: '', type: String },
     sps: { default: 'false', type: String },
     page_class: { default: 'block-area', type: String },
     page_depth: { default: '1', type: String }
+  },
+
+  computed: {
+
+    anchor_styles() {
+      return `padding: ${this.anchor_padding};`
+    },
+    
+    slot1_styles() {
+      return `margin-right: ${this.slot_padding};`
+    },
+    
+    slot2_styles() {
+      return `margin-left: ${this.slot_padding};`
+    },
+  },
+
+  mounted() {
+    this.getPage()
+    this.checkDims()
+    window.addEventListener("scroll", this.onScroll)
+    window.addEventListener("resize", this.checkDims)
+    this.getBreakPointValues()
   },
 
   methods: {
@@ -42,6 +74,7 @@ export default {
       }, 150)
     },
     checkDims() {
+      this.displayWidth = window.innerWidth
       if (this.sps == 'true') {
         // get window, header and target dimentions
         this.window_top = window.scrollY;
@@ -69,6 +102,31 @@ export default {
       oldPath[parseInt(this.page_depth)] = this.url.replace('#','');
       return oldPath.join('/') + query
     },
+    getBreakPointValues() {
+      // set user input property values by breakpoint
+      let thePadding = this.pad.split(',')
+      let theSlotPadding = this.slot_pad.split(',')
+      this.anchor_padding = thePadding[0]
+      this.slot_padding = theSlotPadding[0]
+      switch (true) {
+        case this.displayWidth >= this.bp_sm && this.displayWidth < this.bp_md:
+          for (let i in thePadding) this.anchor_padding = thePadding[i] != undefined && thePadding[i] != '' && i < 2 ? thePadding[i] : this.anchor_padding
+          for (let i in theSlotPadding) this.slot_padding = theSlotPadding[i] != undefined && theSlotPadding[i] != '' && i < 2 ? theSlotPadding[i] : this.slot_padding
+          break
+        case this.displayWidth >= this.bp_md && this.displayWidth < this.bp_lg:
+          for (let i in thePadding) this.anchor_padding = thePadding[i] != undefined && thePadding[i] != '' && i < 3 ? thePadding[i] : this.anchor_padding
+          for (let i in theSlotPadding) this.slot_padding = theSlotPadding[i] != undefined && theSlotPadding[i] != '' && i < 3 ? theSlotPadding[i] : this.slot_padding
+          break
+        case this.displayWidth >= this.bp_lg && this.displayWidth < this.bp_xl:
+          for (let i in thePadding) this.anchor_padding = thePadding[i] != undefined && thePadding[i] != '' && i < 4 ? thePadding[i] : this.anchor_padding
+          for (let i in theSlotPadding) this.slot_padding = theSlotPadding[i] != undefined && theSlotPadding[i] != '' && i < 4 ? theSlotPadding[i] : this.slot_padding
+          break
+        case this.displayWidth >= this.bp_xl:
+          for (let i in thePadding) this.anchor_padding = thePadding[i] != undefined && thePadding[i] != '' ? thePadding[i] : this.anchor_padding
+          for (let i in theSlotPadding) this.slot_padding = theSlotPadding[i] != undefined && theSlotPadding[i] != '' ? theSlotPadding[i] : this.slot_padding
+          break
+      }
+    },
     anchorClick(event) {
       // deteremine click event outcome- external, internal or page nav
       if (this.sps == 'true') {
@@ -83,14 +141,13 @@ export default {
       }
     }
   },
-
-  mounted() {
-    this.getPage()
-    this.checkDims()
-    window.addEventListener("scroll", this.onScroll)
-    window.addEventListener("resize", this.checkDims)
+    
+  watch: {
+    displayWidth() { this.getBreakPointValues() },
   }
 }
+
+
 </script>
 
 <style lang="scss">
@@ -98,6 +155,7 @@ export default {
 a {
   color: inherit;
   text-decoration: none;
+  display: inline-flex;
 }
 
 </style>

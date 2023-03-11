@@ -122,11 +122,11 @@ export default {
         }
         if (this.fit == 'cover' && this.containerAspect >= this.aspect) 
           if (this.containerAspect >= this.aspect) { 
-            this.$el.querySelector('iframe').style.height = '100%'
+            this.$el.querySelector('iframe').style.height = '102%'
             this.$el.querySelector('iframe').style.width = (this.$el.offsetHeight / this.aspect) +'px' 
           }
           if (this.containerAspect < this.aspect) { 
-            this.$el.querySelector('iframe').style.width = '100%'
+            this.$el.querySelector('iframe').style.width = '102%'
             this.$el.querySelector('iframe').style.height = (this.$el.offsetWidth * this.aspect) +'px' 
           }
       }

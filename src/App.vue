@@ -13,34 +13,34 @@
       </div>
     <!-- navigation -->
       <nav>
-        <anchor-wc aid="page1Nav" class="nav-link" sps="true" url="#page1" lbl="Images">
+        <anchor-wc aid="page1Nav" class="nav-link" sps="true" url="#page1" lbl="Images" slot_pad="5px">
           <span slot="prefix"><i class="fa-sharp fa-solid fa-star"></i></span>
         </anchor-wc>
 
-        <anchor-wc aid="page2Nav" class="nav-link" sps="true" url="#page2" lbl="Vimeo">
+        <anchor-wc aid="page2Nav" class="nav-link" sps="true" url="#page2" lbl="Vimeo" slot_pad="5px">
           <span slot="prefix"><i class="fa-sharp fa-solid fa-star"></i></span>
         </anchor-wc>
 
-        <anchor-wc aid="page3Nav" class="nav-link" sps="true" url="#page3" lbl="Youtube">
+        <anchor-wc aid="page3Nav" class="nav-link" sps="true" url="#page3" lbl="Youtube" slot_pad="5px">
           <span slot="prefix"><i class="fa-sharp fa-solid fa-star"></i></span>
         </anchor-wc>
 
-        <anchor-wc aid="page4Nav" class="nav-link" sps="true" url="#page4" lbl="Parallax">
+        <anchor-wc aid="page4Nav" class="nav-link" sps="true" url="#page4" lbl="Parallax" slot_pad="5px">
           <span slot="prefix"><i class="fa-sharp fa-solid fa-star"></i></span>
         </anchor-wc>
 
-        <anchor-wc aid="page5Nav" class="nav-link" sps="true" url="#page5" lbl="SVG Animation">
+        <anchor-wc aid="page5Nav" class="nav-link" sps="true" url="#page5" lbl="SVG Animation" slot_pad="5px">
           <span slot="prefix"><i class="fa-sharp fa-solid fa-star"></i></span>
         </anchor-wc>
 
-        <anchor-wc aid="page6Nav" class="nav-link" sps="true" url="#page6" lbl="Carousel">
+        <anchor-wc aid="page6Nav" class="nav-link" sps="true" url="#page6" lbl="Carousel" slot_pad="5px">
           <span slot="prefix"><i class="fa-sharp fa-solid fa-star"></i></span>
         </anchor-wc>        
       </nav>
     <!-- cta and info -->
       <div class="ctas">
-        <anchor-wc aid="external" classes="btn" url="https://google.com#location3" lbl="(external)"></anchor-wc>
-        <anchor-wc aid="internal" class="nav-link" sps="true" url="#location1" lbl="(internal)">
+        <anchor-wc aid="external" class="btn" url="https://google.com#location3" lbl="(external)" pad="1rem 2rem,,,1.5rem 3rem"></anchor-wc>
+        <anchor-wc aid="internal" class="nav-link" sps="true" url="#location1" lbl="(internal)" slot_pad="2px,5px,1rem,1.5rem">
           <span slot="suffix"><i class="fa-solid fa-circle-chevron-right"></i></span>
         </anchor-wc>
       </div>
@@ -349,6 +349,10 @@ body {
 #top-dots {
   display: block;
   position: relative;
+}
+
+.btn {
+  background-color: aquamarine;
 }
 
 .dots {
