@@ -49,9 +49,9 @@ export default {
   },
 
   mounted() {
-    this.getContainerAspect()
     this.getBreakPointValues()
     this.buildVideo()
+    this.onResize()
     window.addEventListener('resize', this.onResize)
   },
 
@@ -118,9 +118,9 @@ export default {
       if (this.aspect) {
         if (this.fit == 'contain') {
           this.$el.style.minHeight = (this.$el.offsetWidth * this.aspect) +'px'
-          this.$el.querySelector('iframe').style.height = (this.$el.offsetWidth * this.aspect) +'px'
+          this.$el.querySelector('iframe').style.height = ((this.$el.offsetWidth * this.aspect) +2) +'px'
         }
-        if (this.fit == 'cover' && this.containerAspect >= this.aspect) 
+        if (this.fit == 'cover') 
           if (this.containerAspect >= this.aspect) { 
             this.$el.querySelector('iframe').style.height = '102%'
             this.$el.querySelector('iframe').style.width = (this.$el.offsetHeight / this.aspect) +'px' 

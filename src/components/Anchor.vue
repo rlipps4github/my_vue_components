@@ -1,8 +1,8 @@
 <template>
   <a :id="aid" :href="url" :title="atitle || lbl" :style="anchor_styles" @click="anchorClick" :target="sps=='false' ? '_blank' : ''">
-    <div :style="slot1_styles"><slot name="prefix"></slot></div>
+    <div class="prefix" :style="slot1_styles"><slot name="prefix"></slot></div>
     {{ lbl }}
-    <div :style="slot2_styles"><slot name="suffix"></slot></div>
+    <div class="suffix" :style="slot2_styles"><slot name="suffix"></slot></div>
   </a>
 </template>
 
@@ -156,6 +156,10 @@ a {
   color: inherit;
   text-decoration: none;
   display: inline-flex;
+  align-items: center;
+
+  .suffix:empty,
+  .prefix:empty { margin: 0 !important; }
 }
 
 </style>
