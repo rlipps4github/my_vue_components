@@ -158,6 +158,9 @@ a {
   display: inline-flex;
   align-items: center;
 
+  .suffix span,
+  .prefix span { display: grid; }
+
   .suffix:empty,
   .prefix:empty { margin: 0 !important; }
 }
