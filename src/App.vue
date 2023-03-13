@@ -34,7 +34,7 @@
         </anchor-wc>
 
         <anchor-wc aid="page6Nav" class="nav-link" sps="true" url="#page6" lbl="Carousel" slot_pad="5px">
-          <span slot="prefix"><i class="fa-sharp fa-solid fa-star"></i></span>
+          <span slot="prefix"><i class="fa-sharp fa-solid fa-mobile"></i></span>
         </anchor-wc>        
       </nav>
     <!-- cta and info -->
