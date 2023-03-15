@@ -176,14 +176,23 @@
         </div>
 
         <div class="center-all">
-          <carousel-wc card-width="300px,360px" infinite="true" slides-wrap="#html-slides" carousel-popup="true" arrows-wrap="#dope-arrows" align="center" fit="cover">
+          <carousel-wc card-width="300px,360px" infinite="true" slides-wrap="#html-slides" carousel-popup="true" pop-class="enlarge" arrows-wrap="#dope-arrows" align="center" fit="cover">
             <span slot="slides">
               <!-- <hello-world data-pop="https://my.matterport.com/show/?m=kNZhyafGRzB&brand=0"></hello-world> -->
-              <image-wc src="https://picsum.photos/605/400" alt="carousel image"></image-wc>
+              <div>
+                <image-wc src="https://picsum.photos/605/400" alt="carousel image" fit="cover"></image-wc>
+                <a class="enlarge"> &times; </a>
+              </div>
               <!-- <hello-world></hello-world> -->
-              <image-wc src="https://picsum.photos/610/400" alt="carousel image"></image-wc>
+              <div>
+                <image-wc src="https://picsum.photos/610/400" alt="carousel image" fit="cover"></image-wc>
+                <a class="enlarge"> &times; </a>
+              </div>
               <!-- <hello-world></hello-world> -->
-              <image-wc src="https://picsum.photos/612/400" alt="carousel image"></image-wc>
+              <div>
+                <image-wc src="https://picsum.photos/612/400" alt="carousel image" fit="cover"></image-wc>
+                <a class="enlarge"> &times; </a>
+              </div>
             </span>
           </carousel-wc>
           <div id="html-slides"></div>
@@ -333,6 +342,18 @@ body {
     max-height: 100%;
     margin: auto;
   }
+}
+
+.enlarge {
+  width: 5rem;
+  height: 5rem;
+  padding: 1rem;
+  position: absolute;
+  top: 2rem;
+  left: 2rem;
+  background-color: #41B883;
+  color: white;
+  cursor: pointer;
 }
 
 #top-arrows,

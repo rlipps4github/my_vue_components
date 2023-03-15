@@ -69,6 +69,7 @@ export default {
     dotsType: { default: '', type: String },
     infinite: { default: '', type: String },
     carouselPopup: { default: '', type: String },
+    popClass: { default: '', type: String },
     slidesWrap: { default: '', type: String },
     autoAdvance: { default: '', type: String },
     fit: { default: '', type: String }
@@ -248,8 +249,10 @@ export default {
     },
     clickHandler(e) {
       e.preventDefault()
-      if (e.which === 1 || e.button === 1) if (this.arrowsWrap == '') this.onClick()
-      if (e.which === 3 || e.button === 2) if (this.carouselPopup == 'true') this.dblClick(e)
+      if (this.popClass != '' && e.target.classList.contains(this.popClass)) this.dblClick(e)
+      else
+        if (e.which === 1 || e.button === 1) if (this.arrowsWrap == '') this.onClick(e)
+        if (e.which === 3 || e.button === 2) if (this.carouselPopup == 'true' && this.popClass == '') this.dblClick(e)
     },
     modalClickHandler(idx) {
       let theModal = document.querySelector('.carousel-modal')
