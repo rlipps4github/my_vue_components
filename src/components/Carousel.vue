@@ -278,6 +278,7 @@ export default {
       if (this.mouseStalker == null) this.mouseStalker = this.$el.querySelector('.mouse-stalker')
       if (this.transition == 'fade') this.carouselWrap.classList.add('fade')
       if (this.cardWidth != '') this.carouselWrap.classList.add('card')
+      if (this.slideCount == 1) this.carouselWrap.classList.add('single')
     },
     getIndex() {
       let scrollDistance = this.cardSlideWidth ? parseInt(this.cardSlideWidth) : this.currWidth
@@ -331,9 +332,10 @@ export default {
           this.$el.insertBefore(prevClone, this.carouselWrap.nextSibling)
         }
         // need some dupes if we are going to be a card carsouel
-        if (this.cardWidth != '' && this.slideViewColumns == '1' && this.slideViewRows == '1') {
+        if (this.cardWidth != '' && this.slideViewColumns == '1' && this.slideViewRows == '1' && this.slideCount > 1) {
           let dupSlideSet1 = this.carouselSlides.cloneNode(true), ds1 = 0
           let dupSlideSet2 = this.carouselSlides.cloneNode(true), ds2 = 0
+          let dupSlideSet3 = this.carouselSlides.cloneNode(true), ds3 = 0
           while (dupSlideSet1.children[0]) {
             let dupSlide = document.createElement('div')
             dupSlide.setAttribute('sld-idx', ds1)
@@ -364,6 +366,21 @@ export default {
               this.lazyLoader(dupSlide)
               this.carouselWrap.appendChild(dupSlide)
               ds2++
+            }
+            while (dupSlideSet3.children[0]) {
+              let dupSlide = document.createElement('div')
+              dupSlide.setAttribute('sld-idx', ds3)
+              dupSlide.setAttribute('class','slide duped') 
+              dupSlide.setAttribute('style',`max-width:${this.cardSlideWidth};min-width:${this.cardSlideWidth};`)
+              for (let a=0; a<this.sColumns*this.sRows; a++) {
+                let blank = document.createElement('div')
+                blank.setAttribute('itm-idx',a)
+                if (dupSlideSet3.children[0]) blank.appendChild(dupSlideSet3.children[0])
+                dupSlide.appendChild(blank)
+              }
+              this.lazyLoader(dupSlide)
+              this.carouselWrap.appendChild(dupSlide)
+              ds3++
             }
           }
         }
@@ -499,6 +516,7 @@ export default {
     },
     bindArrows() {
       let theWrap = document.querySelector(this.arrowsWrap)
+      if (this.slideCount == 1) theWrap.classList.add('single')
       if (theWrap) {
         let thePrev = theWrap.querySelector('.prev')
         let theNext = theWrap.querySelector('.next')
@@ -508,6 +526,7 @@ export default {
     },
     bindDots(redo = false) {
       let theWrap = document.querySelector(this.dotsWrap)
+      if (this.slideCount == 1) theWrap.classList.add('single')
       if (theWrap.innerHTML == '' || redo) {
         theWrap.innerHTML = ''
         if (this.dotsType != 'dots') {
