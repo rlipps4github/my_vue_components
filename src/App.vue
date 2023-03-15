@@ -179,20 +179,20 @@
           <carousel-wc card-width="300px,360px" infinite="true" slides-wrap="#html-slides" carousel-popup="true" pop-class="enlarge" arrows-wrap="#dope-arrows" align="center" fit="cover">
             <span slot="slides">
               <!-- <hello-world data-pop="https://my.matterport.com/show/?m=kNZhyafGRzB&brand=0"></hello-world> -->
-              <div>
+              <span>
                 <image-wc src="https://picsum.photos/605/400" alt="carousel image" fit="cover"></image-wc>
                 <a class="enlarge"> &times; </a>
-              </div>
+              </span>
               <!-- <hello-world></hello-world> -->
-              <div>
+              <span>
                 <image-wc src="https://picsum.photos/610/400" alt="carousel image" fit="cover"></image-wc>
                 <a class="enlarge"> &times; </a>
-              </div>
+              </span>
               <!-- <hello-world></hello-world> -->
-              <div>
+              <span>
                 <image-wc src="https://picsum.photos/612/400" alt="carousel image" fit="cover"></image-wc>
                 <a class="enlarge"> &times; </a>
-              </div>
+              </span>
             </span>
           </carousel-wc>
           <div id="html-slides"></div>
