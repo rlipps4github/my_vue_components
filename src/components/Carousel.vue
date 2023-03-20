@@ -70,6 +70,7 @@ export default {
     infinite: { default: '', type: String },
     carouselPopup: { default: '', type: String },
     popClass: { default: '', type: String },
+    forcePop: { default: 'false', type: String },
     slidesWrap: { default: '', type: String },
     autoAdvance: { default: '', type: String },
     fit: { default: '', type: String }
@@ -225,11 +226,13 @@ export default {
       let theItemIndex = parseInt( e.target.closest('[itm-idx]').getAttribute('itm-idx') )
       this.popIndex = theSlideIndex + theItemIndex
       if (this.carouselSlides.children[this.popIndex]) {
-        if (this.displayWidth > this.bp_sm) return this.buildPopup(this.popIndex)
+        if (this.displayWidth > this.bp_sm || this.forcePop == 'true') return this.buildPopup(this.popIndex)
         else {
-          let theSrc = this.carouselSlides.children[this.popIndex].getAttribute('src').indexOf('https:') > -1 ? this.carouselSlides.children[this.popIndex].getAttribute('src') : null
-              theSrc = theSrc == null && this.carouselSlides.children[this.popIndex].getAttribute('data-src') ? this.carouselSlides.children[this.popIndex].getAttribute('data-src') : theSrc
-              theSrc = theSrc == null && this.carouselSlides.children[this.popIndex].getAttribute('data-pop') ? this.carouselSlides.children[this.popIndex].getAttribute('data-pop') : theSrc
+          let theSrc = this.carouselSlides.children[this.popIndex].hasAttribute('src') ? this.carouselSlides.children[this.popIndex].getAttribute('src') : null
+              theSrc = theSrc == null || theSrc.indexOf('https') == -1 && this.carouselSlides.children[this.popIndex].hasChildNodes() && this.carouselSlides.children[this.popIndex].children[0].hasAttribute('src') ? this.carouselSlides.children[this.popIndex].children[0].getAttribute('src') : theSrc
+              theSrc = theSrc == null || theSrc.indexOf('https') == -1 && this.carouselSlides.children[this.popIndex].hasAttribute('data-src') ? this.carouselSlides.children[this.popIndex].getAttribute('data-src') : theSrc
+              theSrc = theSrc == null || theSrc.indexOf('https') == -1 && this.carouselSlides.children[this.popIndex].hasChildNodes() && this.carouselSlides.children[this.popIndex].children[0].hasAttribute('data-src') ? this.carouselSlides.children[this.popIndex].children[0].getAttribute('data-src') : theSrc
+              theSrc = theSrc == null || theSrc.indexOf('https') == -1 && this.carouselSlides.children[this.popIndex].hasAttribute('data-pop') ? this.carouselSlides.children[this.popIndex].getAttribute('data-pop') : theSrc
           if (theSrc) window.open( theSrc )
         }
       }
