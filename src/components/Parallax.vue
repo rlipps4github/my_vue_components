@@ -89,7 +89,9 @@ export default {
     onElementObserved(entries) {
       // use the observer to lazyload and track intersection ratio
       entries.forEach(({ isIntersecting}) => {
-        if (isIntersecting) if (!this.lazyLoaded) this.lazyLoaded = true
+        if (isIntersecting) 
+          if (!this.lazyLoaded) this.lazyLoaded = true
+          else this.onScroll()
       });
     },
     onResize() {
