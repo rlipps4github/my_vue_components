@@ -44,7 +44,7 @@ export default {
       str += this.minWidth !== '0' ? `min-width: ${this.minWidth}; ` : ''
       str += this.maxHeight !== '0' ? `max-height: ${this.maxHeight}; ` : ''
       str += this.minHeight !== '0' ? `min-height: ${this.minHeight};` : ''
-      str += `object-fit: ${this.fit}; background-position: ${this.alignment}`
+      str += `object-fit: ${this.fit}; object-position: ${this.alignment}`
       return str
     }
   },
