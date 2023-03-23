@@ -170,7 +170,7 @@ export default {
       }
       if (thePop) {
         event.preventDefault();
-        thePopup = thePop.innerHTML
+        let thePopup = thePop.innerHTML
         this.buildPopup(thePopup)
       }
     }
