@@ -45,7 +45,7 @@ export default {
   computed: {
 
     anchor_onclick() {
-      let theOnclick = his.anchorEvent != '' ? `e.preventDefault();${this.anchorEvent}` : ''
+      let theOnclick = this.anchorEvent != '' ? `e.preventDefault();${this.anchorEvent}` : ''
       return theOnclick
     },
 
