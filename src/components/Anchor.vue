@@ -148,6 +148,7 @@ export default {
         let theModal = document.querySelector('.anchor-modal')
         theModal.innerHTML = popTemplate
         theModal.querySelector('.modal-img').innerHTML = html
+        theModal.querySelector('.modal-close').addEventListener('click', () => { document.querySelector('.anchor-modal').remove() })
         theModal.focus()
       }
     },
