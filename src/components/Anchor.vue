@@ -1,5 +1,5 @@
 <template>
-  <a :id="aid" :href="url" :title="atitle || lbl" :style="anchor_styles" @click="anchorClick" :target="sps=='false' ? '_blank' : ''">
+  <a :id="aid" onclick="anchor_onclick" :href="url" :title="atitle || lbl" :style="anchor_styles" @click="anchorClick" :target="sps=='false' ? '_blank' : ''">
     <div class="prefix" :style="slot1_styles"><slot name="prefix"></slot></div>
     {{ lbl }}
     <div class="suffix" :style="slot2_styles"><slot name="suffix"></slot></div>
@@ -43,6 +43,10 @@ export default {
   },
 
   computed: {
+
+    anchor_onclick() {
+      if (this.anchorEvent != '') return `e.preventDefault();${this.anchorEvent}`
+    },
 
     anchor_styles() {
       return `padding: ${this.anchor_padding};`
@@ -156,7 +160,6 @@ export default {
       }
     },
     anchorClick(event) {
-      let clickEvent = this.anchorEvent != '' ? this.anchorEvent : null
       let thePop = document.querySelector(this.popContainer) ? document.querySelector(this.popContainer) : null
       // determine click event outcome- popup, onclick, external, internal or page nav
       if (this.sps == 'true') {
@@ -173,9 +176,6 @@ export default {
         event.preventDefault();
         let thePopup = thePop.innerHTML
         this.buildPopup(thePopup)
-      }
-      if (clickEvent) {
-        this.$el.querySelector('a').setAttribute('onclick',clickEvent)
       }
     }
   },
