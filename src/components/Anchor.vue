@@ -175,7 +175,7 @@ export default {
         this.buildPopup(thePopup)
       }
       if (clickEvent) {
-        this.$el.setAttribute('onclick',clickEvent)
+        this.$el.querySelector('a').setAttribute('onclick',clickEvent)
       }
     }
   },
