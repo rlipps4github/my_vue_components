@@ -107,6 +107,7 @@ export default {
     window.addEventListener('resize', this.onResize)
     this.loadObserver.observe(this.$el)
     this.$el.addEventListener('contextmenu', (e) => { e.preventDefault(); return false; })
+    if (this.carouselPopup != '' && !window.bindModalCarouselArrows) this.bindModalArrows()
   },
 
   beforeDestroy() { 
@@ -410,6 +411,7 @@ export default {
         document.body.append(popModal)
         let theModal = document.querySelector('.carousel-modal')
         theModal.innerHTML = popTemplate
+        theModal.focus()
         this.modalClickHandler(idx)
         theModal.querySelector('.modal-close').addEventListener('click', () => { document.querySelector('.carousel-modal').remove() })
         theModal.querySelector('.modal-prev').addEventListener('click', () => { 
@@ -556,6 +558,17 @@ export default {
       let theTarget = document.querySelector(this.slidesWrap)
       if (theStyles) theTarget.appendChild(theStyles)
       theTarget.appendChild(theCarousel)
+    },
+    bindModalArrows() {
+      window.bindModalCarouselArrows = true
+      document.onkeydown = (e) => {
+        if (document.querySelector('.carousel-modal')) {
+          e.preventDefault()
+          if (e.code == 'ArrowLeft') document.querySelector('.modal-prev').click()
+          if (e.code == 'ArrowRight') document.querySelector('.modal-next').click()
+          if (e.code == 'Escape') document.querySelector('.modal-close').click()
+        }
+      }
     },
     updateSlideAttr() {
       let theSlides = this.$el.querySelectorAll('.slide')

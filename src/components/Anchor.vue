@@ -1,5 +1,5 @@
 <template>
-  <a :id="aid" :href="url" :title="atitle || lbl" :style="anchor_styles" @click="anchorClick" :target="sps=='false' ? '_blank' : ''">
+  <a :id="aid" :href="url" :onclick="anchorEvent" :title="atitle || lbl" :style="anchor_styles" @click="anchorClick" :target="sps=='false' ? '_blank' : ''">
     <div class="prefix" :style="slot1_styles"><slot name="prefix"></slot></div>
     {{ lbl }}
     <div class="suffix" :style="slot2_styles"><slot name="suffix"></slot></div>
@@ -29,7 +29,9 @@ export default {
   },
 
   props: {
-    url: { default: '', type: String },
+    url: { default: 'javascript:;', type: String },
+    anchorEvent: { default: '', type: String },
+    popContainer: { default: '', type: String },
     pad: { default: '', type: String },
     slot_pad: { default: '', type: String },
     atitle: { default: '', type: String },
@@ -61,6 +63,7 @@ export default {
     window.addEventListener("scroll", this.onScroll)
     window.addEventListener("resize", this.checkDims)
     this.getBreakPointValues()
+    if (this.popContainer != '' && !window.bindModalAnchorControls) this.bindModalControl()
   },
 
   methods: {
@@ -127,8 +130,34 @@ export default {
           break
       }
     },
+    buildPopup(html) {
+      let popModal = document.createElement('div')
+      popModal.classList.add('anchor-modal')
+      popModal.setAttribute("style","width:100%;height:100%;position:fixed;top:0;left:0;background:rgba(0,0,0,0.8);display:grid;z-index:9999;")
+      let popTemplate = `
+        <div class="modal-close" style="width:40px;height:40px;border-radius:50%;position:absolute;top:20px;right:20px;background:rgba(255,255,255,0.3);color:white;font-size:20px;display:flex;justify-content:center;align-items:center;">&times;</div>
+        <div class="modal-img" style="width:100%;max-width:calc(100vw - 150px);height:100%;max-height:calc(100vh - 150px);margin:auto;display:flex;flex-direction:column;justify-content:center;align-items:center;"></div>  
+      `
+      if (document.querySelectorAll('.anchor-modal').length === 0) {
+        document.body.append(popModal)
+        let theModal = document.querySelector('.anchor-modal')
+        theModal.innerHTML = popTemplate
+        theModal.querySelector('.modal-img').innerHTML = html
+        theModal.focus()
+      }
+    },
+    bindModalControl() {
+      window.bindModalAnchorControls = true
+      document.onkeydown = (e) => {
+        if (document.querySelector('.anchor-modal')) {
+          e.preventDefault()
+          if (e.code == 'Escape') document.querySelector('.modal-close').click()
+        }
+      }
+    },
     anchorClick(event) {
-      // deteremine click event outcome- external, internal or page nav
+      let thePop = document.querySelector(this.popContainer) ? document.querySelector(this.popContainer) : null
+      // determine click event outcome- popup, external, internal or page nav
       if (this.sps == 'true') {
         this.checkDims();
         event.preventDefault();
@@ -138,6 +167,11 @@ export default {
           if (window.history && window.history.pushState) history.pushState({ page: this.url }, '', newPath)
         }
         window.scrollTo({ top: this.target_top - parseInt(this.header_offset) + (this.window_top + 1), behavior: scrollBehavior })
+      }
+      if (thePop) {
+        event.preventDefault();
+        thePopup = thePop.innerHTML
+        this.buildPopup(thePopup)
       }
     }
   },
