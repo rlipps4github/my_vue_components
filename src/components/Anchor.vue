@@ -156,7 +156,7 @@ export default {
       }
     },
     anchorClick(event) {
-      let clickEvent = this.anchorEvent && typeof this.anchorEvent == 'function' ? this.anchorEvent : null
+      let clickEvent = this.anchorEvent != '' ? this.anchorEvent : null
       let thePop = document.querySelector(this.popContainer) ? document.querySelector(this.popContainer) : null
       // determine click event outcome- popup, onclick, external, internal or page nav
       if (this.sps == 'true') {
