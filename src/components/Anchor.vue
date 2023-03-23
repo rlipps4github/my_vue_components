@@ -162,7 +162,7 @@ export default {
       }
     },
     anchorClick(event) {
-      let thePop = document.querySelector(this.popContainer) ? document.querySelector(this.popContainer) : null
+      let thePop = this.popContainer != '' ? document.querySelector(this.popContainer) : null
       // determine click event outcome- popup, onclick, external, internal or page nav
       if (this.sps == 'true') {
         this.checkDims();
