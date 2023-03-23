@@ -1,5 +1,5 @@
 <template>
-  <a :id="aid" onclick="anchor_onclick" :href="url" :title="atitle || lbl" :style="anchor_styles" @click="anchorClick" :target="sps=='false' ? '_blank' : ''">
+  <a :id="aid" onclick="this.anchor_onclick()" :href="url" :title="atitle || lbl" :style="anchor_styles" @click="anchorClick" :target="sps=='false' ? '_blank' : ''">
     <div class="prefix" :style="slot1_styles"><slot name="prefix"></slot></div>
     {{ lbl }}
     <div class="suffix" :style="slot2_styles"><slot name="suffix"></slot></div>
