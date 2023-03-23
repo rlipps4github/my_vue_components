@@ -1,5 +1,5 @@
 <template>
-  <a :id="aid" :href="url" :title="atitle || lbl" :style="anchor_styles" @click="anchorClick" :target="sps=='false' ? '_blank' : ''">
+  <a :id="aid" :onclick="anchor_onclick" :href="url" :title="atitle || lbl" :style="anchor_styles" @click="anchorClick" :target="sps=='false' ? '_blank' : ''">
     <div class="prefix" :style="slot1_styles"><slot name="prefix"></slot></div>
     {{ lbl }}
     <div class="suffix" :style="slot2_styles"><slot name="suffix"></slot></div>
@@ -43,6 +43,11 @@ export default {
   },
 
   computed: {
+
+    anchor_onclick() {
+      let theOnclick = this.anchorEvent != '' ? this.anchorEvent : ''
+      return theOnclick
+    },
 
     anchor_styles() {
       return `padding: ${this.anchor_padding};`
@@ -143,6 +148,7 @@ export default {
         let theModal = document.querySelector('.anchor-modal')
         theModal.innerHTML = popTemplate
         theModal.querySelector('.modal-img').innerHTML = html
+        theModal.querySelector('.modal-close').addEventListener('click', () => { document.querySelector('.anchor-modal').remove() })
         theModal.focus()
       }
     },
@@ -156,8 +162,7 @@ export default {
       }
     },
     anchorClick(event) {
-      let clickEvent = this.anchorEvent != '' ? this.anchorEvent : null
-      let thePop = document.querySelector(this.popContainer) ? document.querySelector(this.popContainer) : null
+      let thePop = this.popContainer != '' ? document.querySelector(this.popContainer) : null
       // determine click event outcome- popup, onclick, external, internal or page nav
       if (this.sps == 'true') {
         this.checkDims();
@@ -173,9 +178,6 @@ export default {
         event.preventDefault();
         let thePopup = thePop.innerHTML
         this.buildPopup(thePopup)
-      }
-      if (clickEvent) {
-        this.$el.setAttribute('onclick',clickEvent)
       }
     }
   },
