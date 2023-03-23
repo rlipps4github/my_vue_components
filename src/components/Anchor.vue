@@ -137,27 +137,29 @@ export default {
     },
     buildPopup(html) {
       let popModal = document.createElement('div')
-      popModal.classList.add('anchor-modal')
+      popModal.classList.add('component-modal')
       popModal.setAttribute("style","width:100%;height:100%;position:fixed;top:0;left:0;background:rgba(0,0,0,0.8);display:grid;z-index:9999;")
       let popTemplate = `
         <div class="modal-close" style="width:40px;height:40px;border-radius:50%;position:absolute;top:20px;right:20px;background:rgba(255,255,255,0.3);color:white;font-size:20px;display:flex;justify-content:center;align-items:center;">&times;</div>
         <div class="modal-img" style="width:100%;max-width:calc(100vw - 150px);height:100%;max-height:calc(100vh - 150px);margin:auto;display:flex;flex-direction:column;justify-content:center;align-items:center;"></div>  
       `
-      if (document.querySelectorAll('.anchor-modal').length === 0) {
+      if (document.querySelectorAll('.component-modal').length === 0) {
         document.body.append(popModal)
-        let theModal = document.querySelector('.anchor-modal')
+        let theModal = document.querySelector('.component-modal')
         theModal.innerHTML = popTemplate
         theModal.querySelector('.modal-img').innerHTML = html
-        theModal.querySelector('.modal-close').addEventListener('click', () => { document.querySelector('.anchor-modal').remove() })
+        theModal.querySelector('.modal-close').addEventListener('click', () => { document.querySelector('.component-modal').remove() })
         theModal.focus()
       }
     },
     bindModalControl() {
       window.bindModalAnchorControls = true
       document.onkeydown = (e) => {
-        if (document.querySelector('.anchor-modal')) {
+        if (document.querySelector('.component-modal')) {
           e.preventDefault()
-          if (e.code == 'Escape') document.querySelector('.modal-close').click()
+          if (e.code == 'ArrowLeft' && document.querySelector('.modal-prev')) document.querySelector('.modal-prev').click()
+          if (e.code == 'ArrowRight' && document.querySelector('.modal-next')) document.querySelector('.modal-next').click()
+          if (e.code == 'Escape' && document.querySelector('.modal-close')) document.querySelector('.modal-close').click()
         }
       }
     },

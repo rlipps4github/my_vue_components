@@ -259,7 +259,7 @@ export default {
         if (e.which === 3 || e.button === 2) if (this.carouselPopup == 'true' && this.popClass == '') this.dblClick(e)
     },
     modalClickHandler(idx) {
-      let theModal = document.querySelector('.carousel-modal')
+      let theModal = document.querySelector('.component-modal')
       theModal.querySelector('.modal-img').innerHTML = '' 
       if (this.carouselSlides.children[idx].hasAttribute('data-pop')) {
         let thePopSrc = this.carouselSlides.children[idx].getAttribute('data-pop')
@@ -398,7 +398,7 @@ export default {
     buildPopup(idx) {
       let popModal = document.createElement('div')
       let countClass = this.slideCount == 1 ? 'single' : null
-      popModal.classList.add('carousel-modal')
+      popModal.classList.add('component-modal')
       popModal.setAttribute("style","width:100%;height:100%;position:fixed;top:0;left:0;background:rgba(0,0,0,0.8);display:grid;z-index:9999;")
       let popTemplate = `
           <div class="modal-count ${countClass}" style="width:100px;height:40px;border-radius:20px;position:absolute;top:20px;left:calc(50% - 50px);background:rgba(255,255,255,0.3);color:white;font-size:20px;display:flex;justify-content:center;align-items:center;"></div>
@@ -407,13 +407,13 @@ export default {
           <div class="modal-img ${countClass}" style="width:100%;max-width:calc(100vw - 150px);height:100%;max-height:calc(100vh - 150px);margin:auto;display:flex;flex-direction:column;justify-content:center;align-items:center;"></div>  
           <div class="modal-next ${countClass}" style="width:40px;height:30px;border-radius:50%;position:absolute;top:calc(50% - 20px);right:20px;background:rgba(255,255,255,0.3);color:white;font-size:20px;display:flex;justify-content:center;align-items:center;transform:scaleY(133%);">&gt;</div>
       `
-      if (document.querySelectorAll('.carousel-modal').length === 0) {
+      if (document.querySelectorAll('.component-modal').length === 0) {
         document.body.append(popModal)
-        let theModal = document.querySelector('.carousel-modal')
+        let theModal = document.querySelector('.component-modal')
         theModal.innerHTML = popTemplate
         theModal.focus()
         this.modalClickHandler(idx)
-        theModal.querySelector('.modal-close').addEventListener('click', () => { document.querySelector('.carousel-modal').remove() })
+        theModal.querySelector('.modal-close').addEventListener('click', () => { document.querySelector('.component-modal').remove() })
         theModal.querySelector('.modal-prev').addEventListener('click', () => { 
           this.popIndex = this.popIndex-1 < 0 ? this.carouselSlides.children.length-1 : this.popIndex-1
           this.modalClickHandler(this.popIndex)
@@ -562,11 +562,11 @@ export default {
     bindModalArrows() {
       window.bindModalCarouselArrows = true
       document.onkeydown = (e) => {
-        if (document.querySelector('.carousel-modal')) {
+        if (document.querySelector('.component-modal')) {
           e.preventDefault()
-          if (e.code == 'ArrowLeft') document.querySelector('.modal-prev').click()
-          if (e.code == 'ArrowRight') document.querySelector('.modal-next').click()
-          if (e.code == 'Escape') document.querySelector('.modal-close').click()
+          if (e.code == 'ArrowLeft' && document.querySelector('.modal-prev')) document.querySelector('.modal-prev').click()
+          if (e.code == 'ArrowRight' && document.querySelector('.modal-next')) document.querySelector('.modal-next').click()
+          if (e.code == 'Escape' && document.querySelector('.modal-close')) document.querySelector('.modal-close').click()
         }
       }
     },
