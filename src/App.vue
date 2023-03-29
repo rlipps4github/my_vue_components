@@ -13,27 +13,27 @@
       </div>
     <!-- navigation -->
       <nav>
-        <anchor-wc aid="page1Nav" class="nav-link" sps="true" url="#page1" lbl="Images" slot_pad="5px">
+        <anchor-wc aid="page1Nav" class="nav-link" sps="true" url="#page1" page_depth="1" lbl="Images" slot_pad="5px">
           <span slot="prefix"><i class="fa-sharp fa-solid fa-star"></i></span>
         </anchor-wc>
 
-        <anchor-wc aid="page2Nav" class="nav-link" sps="true" url="#page2" lbl="Vimeo" slot_pad="5px">
+        <anchor-wc aid="page2Nav" class="nav-link" sps="true" url="#page2" page_depth="1" lbl="Vimeo" slot_pad="5px">
           <span slot="prefix"><i class="fa-sharp fa-solid fa-star"></i></span>
         </anchor-wc>
 
-        <anchor-wc aid="page3Nav" class="nav-link" sps="true" url="#page3" lbl="Youtube" slot_pad="5px">
+        <anchor-wc aid="page3Nav" class="nav-link" sps="true" url="#page3" page_depth="1" lbl="Youtube" slot_pad="5px">
           <span slot="prefix"><i class="fa-sharp fa-solid fa-star"></i></span>
         </anchor-wc>
 
-        <anchor-wc aid="page4Nav" class="nav-link" sps="true" url="#page4" lbl="Parallax" slot_pad="5px">
+        <anchor-wc aid="page4Nav" class="nav-link" sps="true" url="#page4" page_depth="1" lbl="Parallax" slot_pad="5px">
           <span slot="prefix"><i class="fa-sharp fa-solid fa-star"></i></span>
         </anchor-wc>
 
-        <anchor-wc aid="page5Nav" class="nav-link" sps="true" url="#page5" lbl="SVG Animation" slot_pad="5px">
+        <anchor-wc aid="page5Nav" class="nav-link" sps="true" url="#page5" page_depth="1" lbl="SVG Animation" slot_pad="5px">
           <span slot="prefix"><i class="fa-sharp fa-solid fa-star"></i></span>
         </anchor-wc>
 
-        <anchor-wc aid="page6Nav" class="nav-link" sps="true" url="#page6" lbl="Carousel" slot_pad="5px">
+        <anchor-wc aid="page6Nav" class="nav-link" sps="true" url="#page6" page_depth="1" lbl="Carousel" slot_pad="5px">
           <span slot="prefix"><i class="fa-sharp fa-solid fa-mobile"></i></span>
         </anchor-wc>        
       </nav>
