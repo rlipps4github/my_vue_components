@@ -16,7 +16,7 @@ npm run build
 ```
 
 ### OR for compiling vue components as a Web Component
-
+```
 npx vue-cli-service build --target wc --inline-vue --name header-1 src/components/<componenent file name>.vue
 ```
 
