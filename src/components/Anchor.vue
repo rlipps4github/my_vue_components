@@ -1,5 +1,5 @@
 <template>
-  <a :id="aid" :onclick="anchor_onclick" :href="url" :title="atitle || lbl" :style="anchor_styles" @click="anchorClick" :target="sps=='false' ? '_blank' : ''">
+  <a :id="aid" :onclick="anchor_onclick" :href="url" :title="atitle || lbl" :style="anchor_styles" @click="anchorClick" :target="sps=='true' ? '_self' : atarget">
     <div class="prefix" :style="slot1_styles"><slot name="prefix"></slot></div>
     {{ lbl }}
     <div class="suffix" :style="slot2_styles"><slot name="suffix"></slot></div>
@@ -36,10 +36,11 @@ export default {
     slot_pad: { default: '', type: String },
     atitle: { default: '', type: String },
     aid: { default: '', type: String },
+    atarget: { default: '_blank', type: String },
     lbl: { default: '', type: String },
     sps: { default: 'false', type: String },
     page_class: { default: 'block-area', type: String },
-    page_depth: { default: '1', type: String }
+    page_depth: { default: '2', type: String }
   },
 
   computed: {
