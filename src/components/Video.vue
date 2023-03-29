@@ -94,7 +94,7 @@ export default {
         let vid_el = this.provider == 'html5' ? document.createElement('video') : document.createElement('iframe')
         if (this.provider == 'html5') {
           let src_el = document.createElement('source')
-          let attribs = { 'class': this.fit, 'preload': true, 'autoplay': true, 'loop': true,  'defaultMuted': true, 'playsinline': true, 'muted': true }
+          let attribs = { 'class': this.fit, 'autoplay': true, 'loop': true, 'playsinline': true, 'muted': true }
           for(var key in attribs) { vid_el.setAttribute(key, attribs[key]); }
           src_el.src = vid_src
           vid_el.appendChild(src_el)
