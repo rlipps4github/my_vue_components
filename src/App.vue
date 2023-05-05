@@ -14,28 +14,32 @@
     <!-- navigation -->
       <nav>
         <anchor-wc aid="page1Nav" class="nav-link" sps="true" url="#page1" page_depth="1" lbl="Images" slot_pad="5px">
-          <span slot="prefix"><i class="fa-sharp fa-solid fa-star"></i></span>
+          <span slot="prefix"><i class="fa-sharp fa-solid fa-camera"></i></span>
         </anchor-wc>
 
         <anchor-wc aid="page2Nav" class="nav-link" sps="true" url="#page2" page_depth="1" lbl="Vimeo" slot_pad="5px">
-          <span slot="prefix"><i class="fa-sharp fa-solid fa-star"></i></span>
+          <span slot="prefix"><i class="fa-sharp fa-solid fa-video"></i></span>
         </anchor-wc>
 
         <anchor-wc aid="page3Nav" class="nav-link" sps="true" url="#page3" page_depth="1" lbl="Youtube" slot_pad="5px">
-          <span slot="prefix"><i class="fa-sharp fa-solid fa-star"></i></span>
+          <span slot="prefix"><i class="fa-sharp fa-solid fa-video"></i></span>
         </anchor-wc>
 
         <anchor-wc aid="page4Nav" class="nav-link" sps="true" url="#page4" page_depth="1" lbl="Parallax" slot_pad="5px">
-          <span slot="prefix"><i class="fa-sharp fa-solid fa-star"></i></span>
+          <span slot="prefix"><i class="fa-sharp fa-solid fa-step-forward"></i></span>
         </anchor-wc>
 
         <anchor-wc aid="page5Nav" class="nav-link" sps="true" url="#page5" page_depth="1" lbl="SVG Animation" slot_pad="5px">
-          <span slot="prefix"><i class="fa-sharp fa-solid fa-star"></i></span>
+          <span slot="prefix"><i class="fa-sharp fa-solid fa-step-forward"></i></span>
         </anchor-wc>
 
         <anchor-wc aid="page6Nav" class="nav-link" sps="true" url="#page6" page_depth="1" lbl="Carousel" slot_pad="5px">
-          <span slot="prefix"><i class="fa-sharp fa-solid fa-mobile"></i></span>
-        </anchor-wc>        
+          <span slot="prefix"><i class="fa-sharp fa-solid fa-sliders"></i></span>
+        </anchor-wc>   
+
+        <anchor-wc aid="page7Nav" class="nav-link" sps="true" url="#page7" page_depth="1" lbl="Tabs" slot_pad="5px">
+          <span slot="prefix"><i class="fa-sharp fa-solid fa-tasks"></i></span>
+        </anchor-wc>      
       </nav>
     <!-- cta and info -->
       <div class="ctas">
@@ -116,7 +120,7 @@
         </div> 
 
         <div class="center-all">
-          <carousel-wc maxw="80rem" minh="25rem" maxh="45rem" auto-advance="10" infinite="true" transition="fade">
+          <carousel-wc maxw="80rem" minh="25rem" maxh="45rem" auto-advance="" infinite="true" transition="fade">
             <span slot="slides">
               <image-wc src="https://picsum.photos/600/390" alt="carousel image"></image-wc>
               <image-wc src="https://picsum.photos/600/410" alt="carousel image"></image-wc>
@@ -181,17 +185,17 @@
               <!-- <hello-world data-pop="https://my.matterport.com/show/?m=kNZhyafGRzB&brand=0"></hello-world> -->
               <span>
                 <image-wc src="https://picsum.photos/605/400" alt="carousel image" fit="cover"></image-wc>
-                <a class="enlarge"> &times; </a>
+                <a class="enlarge"> &#9650; </a>
               </span>
               <!-- <hello-world></hello-world> -->
               <span>
                 <image-wc src="https://picsum.photos/610/400" alt="carousel image" fit="cover"></image-wc>
-                <a class="enlarge"> &times; </a>
+                <a class="enlarge"> &#9650; </a>
               </span>
               <!-- <hello-world></hello-world> -->
               <span>
                 <image-wc src="https://picsum.photos/612/400" alt="carousel image" fit="cover"></image-wc>
-                <a class="enlarge"> &times; </a>
+                <a class="enlarge"> &#9650; </a>
               </span>
             </span>
           </carousel-wc>
@@ -210,6 +214,29 @@
           </div>
         </div>
       </div>
+
+      <div id="page7" class="block-area" style=" background: lightskyblue; ">
+        <h1>7 - Tabs widget</h1>
+        <div class="side-by-side">
+          <hello-world></hello-world>
+          <tabs-wc group-name="lorem tabs">
+            <span slot="tabs">
+              <span>
+                <span>Tab 1</span>
+                <span>Tab 1 content Lorem ipsum dolor, sit amet consectetur adipisicing elit. Optio voluptates ex id ea sunt perspiciatis natus itaque quo, similique, earum et vero corrupti minima, nobis officiis eligendi totam! Sint, quod?</span>
+              </span>
+              <span>
+                <span>Tab 2</span>
+                <span>Tab 2 content Lorem ipsum dolor sit amet, consectetur adipisicing elit. Odio laudantium autem blanditiis! Illum et non iure? Quibusdam maxime, temporibus ipsam, quis maiores quo natus distinctio molestiae cupiditate exercitationem unde excepturi.</span>
+              </span>
+              <span>
+                <span>Tab 3</span>
+                <span>Tab 3 content Lorem ipsum dolor, sit amet consectetur adipisicing elit. Natus deleniti, quasi fugiat debitis possimus fugit facilis porro enim tenetur vel impedit qui odit rerum at? Ullam similique voluptates illum maiores.</span>
+              </span>
+            </span>
+          </tabs-wc>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -222,6 +249,7 @@ import ImageWc from './components/Image.vue'
 import VideoWc from './components/Video.vue'
 import ParallaxWc from './components/Parallax.vue'
 import CarouselWc from './components/Carousel.vue'
+import TabsWc from './components/Tabs.vue'
 
 export default {
   name: 'App',
@@ -232,7 +260,8 @@ export default {
     ImageWc,
     VideoWc,
     ParallaxWc,
-    CarouselWc
+    CarouselWc,
+    TabsWc
   }
 }
 </script>
@@ -345,14 +374,17 @@ body {
 }
 
 .enlarge {
-  width: 5rem;
-  height: 5rem;
+  width: 2.5rem;
+  height: 2.5rem;
   padding: 1rem;
   position: absolute;
   top: 2rem;
   left: 2rem;
   background-color: #41B883;
   color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   cursor: pointer;
 }
 
@@ -400,6 +432,11 @@ body {
       transform: scale(1.5);
     }
   }
+}
+
+[role="tab"] {
+  min-width: 18rem;
+  text-align: center;
 }
 
 @media screen and (min-width: 768px) {
