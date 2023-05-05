@@ -108,6 +108,7 @@ export default {
     this.loadObserver.observe(this.$el)
     this.$el.addEventListener('contextmenu', (e) => { e.preventDefault(); return false; })
     if (this.carouselPopup != '' && !window.bindModalCarouselArrows) this.bindModalArrows()
+    if (this.carouselPopup != '' && this.popClass != '') Array.from(document.getElementsByClassName(this.popClass)).forEach((i) => { i.classList.add('hide-for-modal') })
   },
 
   beforeDestroy() { 
@@ -141,7 +142,7 @@ export default {
       this.scrollTimeout = setTimeout(() => {
         this.scrolling = false
         this.getIndex()
-      },50)
+      },150)
     },
     watchMouse(e) { 
       this.mouseX = e.pageX 
@@ -289,7 +290,11 @@ export default {
       this.setDims()
       let scrollIndex = Math.round(this.currLeft/scrollDistance) || 0
       this.currIndex = scrollIndex < this.slideCount ? scrollIndex : this.currIndex
-      if (scrollIndex > this.slideCount) setTimeout(() => {this.carouselWrap.scrollTo({ left: this.currLeft-(this.slideCount*scrollDistance), behavior: 'instant' })}, 100)
+      if (this.cardSlideWidth) {
+        let scrollOffset = this.currLeft % parseInt(this.cardSlideWidth)
+        if (scrollIndex <= this.slideCount && scrollOffset > 0) this.carouselWrap.scrollTo({ left: this.currLeft-scrollOffset, behavior: 'smooth' })
+        if (scrollIndex > this.slideCount) setTimeout(() => { this.carouselWrap.scrollTo({ left: this.currLeft-(this.slideCount*scrollDistance), behavior: 'instant' }) }, 100)
+      }
     },
     setDims() {
       this.currBounds = this.carouselWrap.getBoundingClientRect()
@@ -310,6 +315,7 @@ export default {
         let nextClone = document.createElement('div')
         while (slideSet.children[0]) {
           let theSlide = document.createElement('div')
+          if (this.popClass != '') theSlide.setAttribute('data-custom-pop','true')
           if (isActive == 0) { 
             theSlide.setAttribute('class','slide active')
             if (this.$el.querySelectorAll('.clone-next').length == 0) prevClone.setAttribute('class','clone clone-next')
@@ -335,57 +341,28 @@ export default {
           this.$el.insertBefore(nextClone, this.carouselWrap)
           this.$el.insertBefore(prevClone, this.carouselWrap.nextSibling)
         }
-        // need some dupes if we are going to be a card carsouel
         if (this.cardWidth != '' && this.slideViewColumns == '1' && this.slideViewRows == '1' && this.slideCount > 1) {
-          let dupSlideSet1 = this.carouselSlides.cloneNode(true), ds1 = 0
-          let dupSlideSet2 = this.carouselSlides.cloneNode(true), ds2 = 0
-          let dupSlideSet3 = this.carouselSlides.cloneNode(true), ds3 = 0
-          while (dupSlideSet1.children[0]) {
-            let dupSlide = document.createElement('div')
-            dupSlide.setAttribute('sld-idx', ds1)
-            dupSlide.setAttribute('class','slide duped') 
-            dupSlide.setAttribute('style',`max-width:${this.cardSlideWidth};min-width:${this.cardSlideWidth};`)
-            for (let a=0; a<this.sColumns*this.sRows; a++) {
-              let blank = document.createElement('div')
-              blank.setAttribute('itm-idx',a)
-              if (dupSlideSet1.children[0]) blank.appendChild(dupSlideSet1.children[0])
-              dupSlide.appendChild(blank)
-            }
-            this.lazyLoader(dupSlide)
-            this.carouselWrap.appendChild(dupSlide)
-            ds1++
-          }
-          if (this.slideCount < 5) {
-            while (dupSlideSet2.children[0]) {
+          // need some dupes if we are going to be a card carsouel
+          let dupCount = this.slideCount < 5 ? 3 : 1
+          while (dupCount > 0) {
+            let dupSlideSet = this.carouselSlides.cloneNode(true), ds = 0
+            while (dupSlideSet.children[0]) {
               let dupSlide = document.createElement('div')
-              dupSlide.setAttribute('sld-idx', ds2)
+              dupSlide.setAttribute('sld-idx', ds)
               dupSlide.setAttribute('class','slide duped') 
               dupSlide.setAttribute('style',`max-width:${this.cardSlideWidth};min-width:${this.cardSlideWidth};`)
+              if (this.popClass != '') dupSlide.setAttribute('data-custom-pop','true')
               for (let a=0; a<this.sColumns*this.sRows; a++) {
                 let blank = document.createElement('div')
                 blank.setAttribute('itm-idx',a)
-                if (dupSlideSet2.children[0]) blank.appendChild(dupSlideSet2.children[0])
+                if (dupSlideSet.children[0]) blank.appendChild(dupSlideSet.children[0])
                 dupSlide.appendChild(blank)
               }
               this.lazyLoader(dupSlide)
               this.carouselWrap.appendChild(dupSlide)
-              ds2++
+              ds++
             }
-            while (dupSlideSet3.children[0]) {
-              let dupSlide = document.createElement('div')
-              dupSlide.setAttribute('sld-idx', ds3)
-              dupSlide.setAttribute('class','slide duped') 
-              dupSlide.setAttribute('style',`max-width:${this.cardSlideWidth};min-width:${this.cardSlideWidth};`)
-              for (let a=0; a<this.sColumns*this.sRows; a++) {
-                let blank = document.createElement('div')
-                blank.setAttribute('itm-idx',a)
-                if (dupSlideSet3.children[0]) blank.appendChild(dupSlideSet3.children[0])
-                dupSlide.appendChild(blank)
-              }
-              this.lazyLoader(dupSlide)
-              this.carouselWrap.appendChild(dupSlide)
-              ds3++
-            }
+            dupCount--
           }
         }
       }
@@ -401,6 +378,7 @@ export default {
       popModal.classList.add('component-modal')
       popModal.setAttribute("style","width:100%;height:100%;position:fixed;top:0;left:0;background:rgba(0,0,0,0.8);display:grid;z-index:9999;")
       let popTemplate = `
+          <style>.component-modal .hide-for-modal{display: none;}</style>
           <div class="modal-count ${countClass}" style="width:100px;height:40px;border-radius:20px;position:absolute;top:20px;left:calc(50% - 50px);background:rgba(255,255,255,0.3);color:white;font-size:20px;display:flex;justify-content:center;align-items:center;"></div>
           <div class="modal-close ${countClass}" style="width:40px;height:40px;border-radius:50%;position:absolute;top:20px;right:20px;background:rgba(255,255,255,0.3);color:white;font-size:20px;display:flex;justify-content:center;align-items:center;">&times;</div>
           <div class="modal-prev ${countClass}" style="width:40px;height:30px;border-radius:50%;position:absolute;top:calc(50% - 20px);left:20px;background:rgba(255,255,255,0.3);color:white;font-size:20px;display:flex;justify-content:center;align-items:center;transform:scaleY(133%);">&lt;</div>
@@ -831,7 +809,7 @@ export default {
     &[data-col="9"] .slide { grid-template-columns: repeat(9, 1fr); }
     &[data-col="10"] .slide { grid-template-columns: repeat(10, 1fr); }
 
-    &[data-modal="true"] .slide:hover {
+    &[data-modal="true"] .slide:not([data-custom-pop]):hover {
       &::before {
         content: url("data:image/svg+xml,%3Csvg enable-background='new 0 0 417.031 417.031' width='36' height='30' viewBox='0 0 417.031 417.031' fill='white' stroke-color='white' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='m219.683 92.146c-.279-.315-.52-.627-.849-.925-3.644-3.272-3.742-2.306.247-5.983 2.955-2.712 6.541-4.834 9.79-7.18 8.596-6.213 14.254-14.534 18.079-24.399 8.582-22.15-16.706-37.453-29.396-50.562-9.168-9.485-23.603 4.982-14.444 14.447 7.076 7.325 16.19 13.264 22.349 21.407 6.897 9.116-3.613 19.174-10.814 24.249-11.133 7.844-20.757 18.262-18.533 29.434-49.964 4.668-96.16 32.052-96.16 80.327v135.51c0 59.862 48.698 108.562 108.564 108.562 59.863 0 108.566-48.7 108.566-108.562v-135.521c.003-52.703-49.032-78.227-97.399-80.804zm-99.292 80.804c0-35.833 38.898-56.581 79.186-60.027v124.982c-36.751-1.85-66.589-10.222-79.186-14.309zm176.257 135.511c0 48.604-39.537 88.133-88.129 88.133-48.59 0-88.128-39.529-88.128-88.133v-63.381c18.249 5.516 52.6 13.882 93.202 13.882 26.003 0 54.556-3.479 83.056-13.286v62.785zm0-84.521c-25.844 9.883-52.237 13.746-76.635 14.271v-125.59c39.407 2.363 76.635 21.264 76.635 60.337zm-6.913-7.737s-46.688 13.073-62.567 10.271v-103.661c42.261 7.94 69.457 20.72 62.567 93.39z'/%3E%3C/svg%3E");
         padding: 5px;
