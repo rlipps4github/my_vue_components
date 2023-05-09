@@ -120,6 +120,7 @@ export default {
         // Tabs controller
         if (tabContainer.querySelector('[role="tab"]')) {
           tabContainer.querySelectorAll('[role="tab"]').forEach((t) => { 
+            t.onclick = (e) => { e.target.focus() }
             t.onfocus = (e) => {
               tabContainer.querySelectorAll('[role="tab"]').forEach((s) => { s.setAttribute('aria-selected','false'); s.setAttribute('tabindex','-1') })
               tabContainer.querySelectorAll('[role="tabpanel"]').forEach((s) => { s.setAttribute('hidden','') })
