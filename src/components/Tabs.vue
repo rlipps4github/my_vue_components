@@ -167,7 +167,7 @@ export default {
       this.switchTimeout = setTimeout(() => {
         let theContainerW = document.getElementById(`${this.tabsAccContainerID}-tabs-acc`).clientWidth
         let theNavW = document.querySelector('.tabs-nav').clientWidth
-        console.log('container width: '+theContainerW+' | nav width: '+theNavW)
+        // console.log('container width: '+theContainerW+' | nav width: '+theNavW)
         if (theNavW > theContainerW) this.accordionSwitch = true
       }, 150)
     }
