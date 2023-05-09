@@ -223,7 +223,7 @@
             <span slot="tabs">
               <span>
                 <span>Tab 1</span>
-                <span>Tab 1 content Lorem ipsum dolor, sit amet consectetur adipisicing elit. Optio voluptates ex id ea sunt perspiciatis natus itaque quo, similique, earum et vero corrupti minima, nobis officiis eligendi totam! Sint, quod?</span>
+                <span><p>Tab 1 content Lorem ipsum dolor, sit amet consectetur adipisicing elit. Optio voluptates ex id ea sunt perspiciatis natus itaque quo, similique, earum et vero corrupti minima, nobis officiis eligendi totam! Sint, quod?</p><p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Quos ipsam explicabo, officia excepturi cum debitis hic sit repellendus eius? Placeat, nesciunt? Quas officiis, voluptatum error illo nulla voluptatibus eum corporis?</p></span>
               </span>
               <span>
                 <span>Tab 2</span>
@@ -231,7 +231,7 @@
               </span>
               <span>
                 <span>Tab 3</span>
-                <span>Tab 3 content Lorem ipsum dolor, sit amet consectetur adipisicing elit. Natus deleniti, quasi fugiat debitis possimus fugit facilis porro enim tenetur vel impedit qui odit rerum at? Ullam similique voluptates illum maiores.</span>
+                <span>Tab 3 content Lorem ipsum dolor, sit amet consectetur adipisicing elit. Natus deleniti, quasi fugiat debitis possimus fugit facilis porro enim tenetur vel impedit qui odit rerum at? Ullam similique voluptates illum maiores. Lorem ipsum dolor sit, amet consectetur adipisicing elit. Dolorem sapiente, odio consequuntur excepturi eius sequi cupiditate a pariatur natus vero provident ex dolor voluptate amet magni, atque alias totam omnis.</span>
               </span>
             </span>
           </tabs-wc>
@@ -434,9 +434,70 @@ body {
   }
 }
 
-[role="tab"] {
-  min-width: 18rem;
-  text-align: center;
+.component-tabs-acc {
+  max-width: 80rem;
+  min-height: 80%;
+
+  [role="tab"] {
+    min-width: 18rem;
+    background-color: lightgray;
+    border: solid 1px;
+    border-width: 1px;
+    text-align: center;
+    font-size: 2rem;
+    font-family: cursive;
+    transition: background-color 0.3s;
+    z-index: 2;
+
+    + [role="tab"] { border-left: 0; }
+
+    &[aria-selected="true"],
+    &:hover { 
+      background-color: white; 
+      cursor: pointer;
+    }
+
+    &[aria-selected="true"] { border-width: 1px 1px 0;}
+  }
+
+  [role="tabpanel"] {
+    padding: 1.5rem;
+    border: 1px solid;
+    margin-top: -1px;
+    background-color: white;
+    text-align: left;
+    z-index: 1;
+  }
+
+  .accordion-trigger {
+    width: 100%;
+    background-color: lightgray;
+    border: solid 1px;
+    border-width: 1px 1px 0;
+    text-align: center;
+    font-size: 2rem;
+    font-family: cursive;
+    transition: 0.3s;
+    z-index: 2;
+    
+    &[aria-expanded="true"],
+    &:hover { 
+      background-color: white; 
+      cursor: pointer;
+    }
+
+    &[aria-expanded="true"] + [role="region"] { padding: 1.5rem; }
+  }
+
+  [role="region"] {
+    border: solid;
+    border-width: 0 1px;
+    background-color: white;
+    z-index: 1;
+
+    &:last-of-type { border-bottom: 1px solid; }
+  }
+  
 }
 
 @media screen and (min-width: 768px) {
